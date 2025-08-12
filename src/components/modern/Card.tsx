@@ -1,4 +1,4 @@
-import { Card as ShadcnCard, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { UnifiedCard } from "@/components/ui/unified-card";
 import { cn } from "@/lib/utils";
 
 export function Card({ 
@@ -13,19 +13,14 @@ export function Card({
   hover?: boolean;
 }) {
   return (
-    <ShadcnCard className={cn(
-      "transition will-change-transform",
-      hover ? "hover:-translate-y-0.5 hover:shadow-lg" : "",
+    <UnifiedCard className={cn(
+      hover ? "hover:-translate-y-1 transition-transform duration-300" : "",
       className
     )}>
       {title && (
-        <CardHeader>
-          <CardTitle className="h3">{title}</CardTitle>
-        </CardHeader>
+        <h3 className="text-xl font-semibold mb-4">{title}</h3>
       )}
-      <CardContent className={title ? "" : "pt-6"}>
-        {children}
-      </CardContent>
-    </ShadcnCard>
+      {children}
+    </UnifiedCard>
   );
 }

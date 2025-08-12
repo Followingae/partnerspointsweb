@@ -22,7 +22,9 @@
       "Bash(cat:*)",
       "Bash(npx tsc:*)",
       "Bash(rm:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }

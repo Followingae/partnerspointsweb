@@ -7,6 +7,7 @@ import { FadeIn } from "@/components/animate-ui/fade-in"
 import { AnimatedText } from "@/components/animate-ui/animated-text"
 import { ArrowRight, Target, Users, Shield, TrendingUp, Heart } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { ChartConfig } from "@/components/ui/chart"
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/charts/ClientChart"
 
@@ -225,8 +226,14 @@ export default function AboutPage() {
                   </div>
                   <div className="bg-muted/20 p-8 lg:p-12 flex items-center justify-center">
                     <div className="text-center">
-                      <div className="w-32 h-16 bg-muted rounded flex items-center justify-center mx-auto mb-4">
-                        <span className="text-muted-foreground">RFM Logo</span>
+                      <div className="w-32 h-16 flex items-center justify-center mx-auto mb-4">
+                        <Image
+                          src="/rfm-loyalty-logo.jpg"
+                          alt="RFM Loyalty"
+                          width={128}
+                          height={64}
+                          className="object-contain"
+                        />
                       </div>
                       <p className="text-sm text-muted-foreground">
                         Leading payment technology and<br />merchant engagement solutions

@@ -57,7 +57,6 @@ export function Header() {
           <ModeToggle variant="pills" />
           <Button 
             asChild
-            className="bg-electric-blue hover:bg-electric-blue/90 text-white"
           >
             <Link href={primaryCTA.href}>
               {primaryCTA.label}
@@ -66,51 +65,80 @@ export function Header() {
         </div>
 
         {/* Mobile Menu Button */}
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           className="md:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          onClick={() => {
+            console.log('Mobile menu clicked, current state:', mobileMenuOpen)
+            setMobileMenuOpen(!mobileMenuOpen)
+          }}
         >
           {mobileMenuOpen ? (
             <X className="h-6 w-6" />
           ) : (
             <Menu className="h-6 w-6" />
           )}
-        </button>
+        </Button>
       </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t bg-white">
-          <div className="container mx-auto px-4 py-4 space-y-4">
-            {/* Mode Toggle */}
-            <ModeToggle variant="default" className="w-full" />
-            
-            {/* Navigation */}
-            <nav className="space-y-3">
-              {navItems.map((item) => (
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={cn(
+          "md:hidden fixed left-0 right-0 bottom-0 z-50 transition-transform duration-300",
+          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        )}
+        style={{ 
+          top: '64px',
+          height: 'calc(100vh - 64px)',
+          backgroundColor: '#ffffff'
+        }}
+      >
+        <div className="flex flex-col w-full h-full px-8 py-12">
+          {/* Mode Toggle */}
+          <div className="mb-12">
+            <ModeToggle variant="default" className="w-full h-14 text-lg" />
+          </div>
+          
+          {/* Navigation */}
+          <div className="flex-1 space-y-6">
+            {navItems.map((item) => (
+              <Button
+                key={item.href}
+                variant="ghost"
+                asChild
+                className="w-full justify-start text-2xl font-semibold"
+                style={{ height: '80px', minHeight: '80px' }}
+              >
                 <Link
-                  key={item.href}
                   href={item.href}
-                  className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center h-full"
                 >
                   {item.label}
                 </Link>
-              ))}
-            </nav>
-            
-            {/* CTA */}
+              </Button>
+            ))}
+          </div>
+          
+          {/* CTA */}
+          <div className="mt-12">
             <Button 
               asChild
-              className="w-full bg-electric-blue hover:bg-electric-blue/90 text-white"
+              className="w-full text-2xl font-semibold"
+              style={{ height: '80px', minHeight: '80px' }}
             >
-              <Link href={primaryCTA.href}>
+              <Link 
+                href={primaryCTA.href} 
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center h-full"
+              >
                 {primaryCTA.label}
               </Link>
             </Button>
           </div>
         </div>
-      )}
+      </div>
     </header>
   )
 }

@@ -24,13 +24,13 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="bg-midnight-navy text-white">
+    <footer className="bg-foreground text-background">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
             <Logo color="white" />
-            <p className="text-sm text-white/70 max-w-xs">
+            <p className="text-sm text-background/70 max-w-xs">
               Reward smarter, not cheaper. Replace blanket discounts with points that bring customers back.
             </p>
           </div>
@@ -43,7 +43,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link 
                     href={link.href}
-                    className="text-sm text-white/70 hover:text-white transition-colors"
+                    className="text-sm text-background/70 hover:text-background transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -60,7 +60,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link 
                     href={link.href}
-                    className="text-sm text-white/70 hover:text-white transition-colors"
+                    className="text-sm text-background/70 hover:text-background transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -77,7 +77,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link 
                     href={link.href}
-                    className="text-sm text-white/70 hover:text-white transition-colors"
+                    className="text-sm text-background/70 hover:text-background transition-colors"
                   >
                     {link.label}
                   </Link>

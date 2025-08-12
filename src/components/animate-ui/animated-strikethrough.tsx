@@ -4,38 +4,28 @@ import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
 import { cn } from "@/lib/utils"
 
-interface AnimatedTextProps {
+interface AnimatedStrikethroughProps {
   text: string
   className?: string
   delay?: number
   stagger?: number
-  variant?: "fade" | "slide" | "scale"
+  strikethroughDelay?: number
 }
 
-export function AnimatedText({
+export function AnimatedStrikethrough({
   text,
   className = "",
   delay = 0,
   stagger = 0.05,
-  variant = "slide"
-}: AnimatedTextProps) {
+  strikethroughDelay = 1
+}: AnimatedStrikethroughProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const words = text.split(" ")
 
-  const variants = {
-    fade: {
-      hidden: { opacity: 0 },
-      visible: { opacity: 1 }
-    },
-    slide: {
-      hidden: { opacity: 0, y: 50 },
-      visible: { opacity: 1, y: 0 }
-    },
-    scale: {
-      hidden: { opacity: 0, scale: 0.8 },
-      visible: { opacity: 1, scale: 1 }
-    }
+  const textVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 }
   }
 
   const container = {
@@ -49,10 +39,22 @@ export function AnimatedText({
     },
   }
 
+  const lineVariants = {
+    hidden: { scaleX: 0 },
+    visible: {
+      scaleX: 1,
+      transition: {
+        duration: 0.8,
+        delay: strikethroughDelay,
+        ease: [0.25, 0.4, 0.25, 1]
+      }
+    }
+  }
+
   return (
     <motion.div
       ref={ref}
-      className={cn("", className)}
+      className={cn("relative inline-block", className)}
       variants={container}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
@@ -60,8 +62,8 @@ export function AnimatedText({
       {words.map((word, index) => (
         <motion.span
           key={index}
-          className="inline-block mr-3"
-          variants={variants[variant]}
+          className="inline-block mr-1"
+          variants={textVariants}
           transition={{
             duration: 0.8,
             ease: [0.25, 0.4, 0.25, 1],
@@ -73,6 +75,15 @@ export function AnimatedText({
           {word}
         </motion.span>
       ))}
+      
+      {/* Animated strikethrough line */}
+      <motion.div
+        className="absolute top-1/2 left-0 h-1 bg-destructive origin-left"
+        style={{ width: '100%', transform: 'translateY(-50%)' }}
+        variants={lineVariants}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+      />
     </motion.div>
   )
 }

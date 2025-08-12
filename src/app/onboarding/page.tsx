@@ -87,7 +87,7 @@ export default function OnboardingPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <CurrentIcon className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold">From sign-up to your first rewarded sale in hours.</h1>
+            <h1 className="text-4xl font-bold">From sign-up to your first rewarded sale in hours</h1>
           </div>
           <p className="text-xl text-muted-foreground">
             Simple onboarding flow — we configure your RFM Payment Terminal for loyalty.

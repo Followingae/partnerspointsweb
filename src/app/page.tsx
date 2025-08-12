@@ -11,7 +11,7 @@ import Image from "next/image";
 import Section from "@/components/modern/Section";
 import { Card } from "@/components/modern/Card";
 import InView from "@/components/modern/InView";
-import HeroBg from "@/components/modern/HeroBg";
+import { BubbleBackground } from "@/components/animate-ui/bubble-background";
 import Container from "@/components/modern/Container";
 import InteractiveBlock from "@/components/modern/InteractiveBlock";
 import StepBlock from "@/components/modern/StepBlock";
@@ -58,17 +58,21 @@ export default function Home() {
     return (
       <div className="min-h-screen">
         {/* Customer Hero Section */}
-        <section className="relative min-h-screen flex items-center overflow-hidden">
-          <HeroBg />
-          <Container>
-            <div className="text-center max-w-4xl mx-auto relative">
+        <section className="relative h-[100vh] flex items-center justify-center overflow-hidden">
+          <BubbleBackground />
+          <div className="mx-auto max-w-7xl px-2 md:px-4">
+            <div className="text-center max-w-5xl mx-auto relative">
               <InView className="animate-hero">
-                <h1 className="h1 mb-6">
-                  Earn points every time you shop
+                <h1 className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.85] mb-6">
+                  <AnimatedText
+                    text="Earn points every time you shop"
+                    variant="slide"
+                    stagger={0.08}
+                  />
                 </h1>
               </InView>
               <InView className="animate-slide-up">
-                <p className="lead mb-8">
+                <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
                   Redeem at your favorite places — no gimmicks, no hidden rules
                 </p>
               </InView>
@@ -80,7 +84,7 @@ export default function Home() {
                 </Button>
               </InView>
             </div>
-          </Container>
+          </div>
         </section>
 
         {/* How It Works - Customer */}
@@ -131,7 +135,7 @@ export default function Home() {
                 icon={<Zap className="w-6 h-6" />}
                 title="Instant rewards"
                 description="Points add up quickly with every purchase"
-                variant="highlight"
+                variant="default"
                 delay={100}
               />
               
@@ -190,53 +194,65 @@ export default function Home() {
 
   // Business Mode
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       
       {/* Business Hero Section */}
-      <section className="py-24 md:py-32 relative overflow-hidden">
-        <div className="relative">
-          <HeroBg />
-          <div className="mx-auto max-w-page px-6">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <InView className="animate-slide-up">
-                <div className="space-y-8">
-                  <h1 className="h1 font-bold tracking-tight">
-                    All-in-one payments, with loyalty built in.
-                  </h1>
-                  <p className="lead">
-                    Reward customers at checkout—no apps, no friction. RFM Loyalty helps merchants drive repeat purchases and reduce costs on a single payment terminal.
+      <section className="relative h-[100vh] overflow-hidden">
+        <div className="relative w-full h-full">
+          <BubbleBackground />
+          <div className="mx-auto max-w-7xl px-4 md:px-4 h-full">
+            <div className="grid lg:grid-cols-2 gap-4 lg:gap-12 h-full items-stretch pt-32 px-6 pb-4 lg:py-0 lg:px-0">
+              <div className="space-y-6 lg:space-y-8 flex flex-col justify-center text-center lg:text-left">
+                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl xl:text-7xl font-bold lg:font-semibold tracking-tighter leading-[0.85]">
+                  <div>
+                    <AnimatedText
+                      text="Loyalty built into"
+                      variant="fade"
+                      stagger={0.08}
+                    />
+                  </div>
+                  <div>
+                    <AnimatedText
+                      text="payments"
+                      variant="fade"
+                      stagger={0.08}
+                    />
+                  </div>
+                </h1>
+                <InView className="animate-slide-up">
+                  <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-6 lg:mb-8">
+                    Reward customers at checkout. We help merchants drive repeat purchases and reduce costs with a full loyalty platform within the payment terminal
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Button size="lg" className="rounded-full px-8 py-3 bg-black text-white hover:bg-black/90">
+                </InView>
+                <InView className="animate-slide-up">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+                    <Button size="lg" className="rounded-full px-8 py-3 text-base font-medium">
                       <Link href="/onboarding" className="flex items-center gap-2">
-                        Get a live demo <ArrowRight className="h-5 w-5" />
+                        Get Started <ArrowRight className="h-5 w-5" />
                       </Link>
                     </Button>
-                    <Button variant="outline" className="rounded-full px-8 py-3" asChild>
+                    <Button variant="outline" className="rounded-full px-8 py-3 text-base font-medium" asChild>
                       <Link href="/calculator" className="flex items-center gap-2">
-                        See how it works
+                        Benefits Calculator
                       </Link>
                     </Button>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Trusted by merchants across Retail, Restaurants, Clinics & Supermarkets.
-                  </div>
-                </div>
-              </InView>
+                </InView>
+              </div>
 
-              {/* Hero Logos */}
-              <InView className="animate-slide-left">
-                <div className="flex items-center gap-8 opacity-80">
-                  <div className="w-24 h-12 bg-gray-100 rounded flex items-center justify-center">
-                    <span className="text-xs text-gray-500">Brand 1</span>
-                  </div>
-                  <div className="w-24 h-12 bg-gray-100 rounded flex items-center justify-center">
-                    <span className="text-xs text-gray-500">Brand 2</span>
-                  </div>
-                  <div className="w-24 h-12 bg-gray-100 rounded flex items-center justify-center">
-                    <span className="text-xs text-gray-500">Brand 3</span>
-                  </div>
-                </div>
+              {/* Hero Image */}
+              <InView className="animate-slide-left h-full flex items-end justify-center lg:justify-start">
+                <Image
+                  src="/partnerspointscustomersearned1.png"
+                  alt="Partners Points customers earned"
+                  width={800}
+                  height={600}
+                  className="w-full max-w-md sm:max-w-lg lg:max-w-none h-auto object-contain"
+                  style={{
+                    maxHeight: '85%'
+                  }}
+                  priority
+                />
               </InView>
             </div>
           </div>
@@ -249,16 +265,9 @@ export default function Home() {
           <div className="text-center mb-16 max-w-4xl mx-auto">
             <h2 className="h2 mb-6">
               <AnimatedText
-                text="Discounts"
-                className="line-through text-muted-foreground mr-4 inline-block"
+                text="Replace Discounts with Points"
                 variant="slide"
-                stagger={0.1}
-              />
-              <AnimatedText
-                text="Points"
-                className="inline-block"
-                variant="slide"
-                delay={0.3}
+                stagger={0.05}
               />
             </h2>
             <p className="lead">
@@ -270,7 +279,7 @@ export default function Home() {
               icon={<TrendingDown className="w-6 h-6" />}
               title="Traditional discounts"
               description="Discounts slash profit from every sale, even for one-time customers who never return"
-              variant="subtle"
+              variant="default"
               delay={100}
             />
             
@@ -278,7 +287,7 @@ export default function Home() {
               icon={<TrendingUp className="w-6 h-6" />}
               title="Smart points system"
               description="Points reward loyalty — you only pay when customers actually redeem their rewards"
-              variant="highlight"
+              variant="default"
               delay={200}
             />
           </div>
@@ -390,7 +399,7 @@ export default function Home() {
                 icon={<Zap className="w-8 h-8" />}
                 title="Zero upfront costs"
                 description="No setup fees, no integration costs, no hardware purchases. You only pay a small fee when customers redeem their points"
-                variant="highlight"
+                variant="default"
                 delay={200}
                 className="p-8"
               />
@@ -433,21 +442,6 @@ export default function Home() {
         </Container>
       </Section>
 
-      {/* Final CTA */}
-      <Section className="bg-primary text-primary-foreground relative overflow-hidden">
-        <Container>
-          <div className="text-center relative z-10">
-            <h2 className="h2 mb-6">
-              Start rewarding smarter — from your payment terminal
-            </h2>
-            <Button className="rounded-full" asChild>
-              <Link href="/onboarding" className="flex items-center gap-2">
-                Start Onboarding <ArrowRight className="h-5 w-5" />
-              </Link>
-            </Button>
-          </div>
-        </Container>
-      </Section>
     </div>
   )
 }

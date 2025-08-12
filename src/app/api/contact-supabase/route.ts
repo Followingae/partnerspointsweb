@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@supabase/supabase-js'
-import { sendEmail, generateContactFormEmail } from '@/lib/email'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,21 +24,21 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
-    // Validate the request body
-    const data = ContactSchema.parse(body)
+    // Validate input
+    const validatedData = ContactSchema.parse(body)
     
     // Save to database using Supabase client
-    const { data: submission, error } = await supabase
+    const { data, error } = await supabase
       .from('contact_submissions')
       .insert({
-        name: data.name,
-        email: data.email,
-        company: data.company || null,
-        phone: data.phone || null,
-        message: data.message,
-        form_type: data.formType,
+        name: validatedData.name,
+        email: validatedData.email,
+        company: validatedData.company || null,
+        phone: validatedData.phone || null,
+        message: validatedData.message,
+        form_type: validatedData.formType,
         status: 'new',
-        metadata: data.metadata || null,
+        metadata: validatedData.metadata || null,
       })
       .select()
       .single()
@@ -49,24 +48,10 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to save contact submission')
     }
 
-    // Send email notification
-    const { html, text } = generateContactFormEmail(data)
-    const emailResult = await sendEmail({
-      to: process.env.CONTACT_EMAIL || 'hello@partnerspoints.com',
-      subject: `New ${data.formType === 'onboarding' ? 'Onboarding' : 'Contact'} Form Submission - ${data.name}`,
-      html,
-      text,
-    })
-
-    if (!emailResult.success) {
-      console.error('Failed to send notification email:', emailResult.error)
-      // Continue anyway - form submission is saved
-    }
-
     return NextResponse.json({
       success: true,
-      message: 'Your message has been sent successfully. We\'ll get back to you within 24 hours.',
-      submissionId: submission.id,
+      message: 'Message sent successfully!',
+      submissionId: data.id
     })
   } catch (error) {
     console.error('Contact form error:', error)
@@ -87,9 +72,11 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   return NextResponse.json({
-    message: 'Partners Points Contact API',
+    message: 'Partners Points Contact API (Supabase Version)',
     endpoints: {
-      'POST /api/contact': 'Submit contact form'
-    }
+      'POST /api/contact-supabase': 'Submit contact form'
+    },
+    requiredFields: ['name', 'email', 'message'],
+    optionalFields: ['company', 'phone', 'formType', 'metadata']
   })
 }

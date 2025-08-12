@@ -5,7 +5,7 @@ export function StructuredData() {
     "name": "Partners Points",
     "description": "Business loyalty platform that helps merchants reward customers smarter, not cheaper",
     "url": process.env.NEXT_PUBLIC_SITE_URL || "https://partnerspoints.com",
-    "logo": `${process.env.NEXT_PUBLIC_SITE_URL || "https://partnerspoints.com"}/logo.png`,
+    "logo": `${process.env.NEXT_PUBLIC_SITE_URL || "https://partnerspoints.com"}/partnerspointslogo.png`,
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+971-4-123-4567",

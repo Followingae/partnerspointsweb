@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Calculator, RefreshCw, TrendingUp } from "lucide-react"
+import { Calculator, RefreshCw, TrendingUp, Plus, Minus } from "lucide-react"
 import Link from "next/link"
 import { ChartConfig } from "@/components/ui/chart"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, PieChart, Pie, Cell, RadialBarChart, RadialBar, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/charts/ClientChart"
@@ -53,14 +53,22 @@ export default function CalculatorPage() {
     setRedemptionRate(35)
   }
 
+  const incrementSales = () => {
+    setMonthlySales(prev => Math.min(prev + 50000, 1000000))
+  }
+
+  const decrementSales = () => {
+    setMonthlySales(prev => Math.max(prev - 50000, 50000))
+  }
+
   return (
-    <div className="min-h-screen bg-background py-12">
+    <div className="min-h-screen bg-background py-12 pt-24 lg:pt-32">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Calculator className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold">Know your loyalty ROI before you start.</h1>
+            <h1 className="text-4xl font-bold">Know your loyalty ROI before you start</h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Calculate based on real transaction volume from your RFM Payment Terminal.
@@ -78,30 +86,43 @@ export default function CalculatorPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Monthly Sales */}
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <Label htmlFor="monthly-sales">Monthly Sales Volume</Label>
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-muted-foreground">AED</span>
-                  <Input
-                    id="monthly-sales"
-                    type="number"
-                    value={monthlySales}
-                    onChange={(e) => setMonthlySales(Number(e.target.value))}
-                    className="text-lg"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Slider
-                    value={[monthlySales]}
-                    onValueChange={(value) => setMonthlySales(value[0])}
-                    max={500000}
-                    min={10000}
-                    step={5000}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>AED 10K</span>
-                    <span>AED 500K</span>
+                <div className="bg-muted/50 rounded-xl p-6 border">
+                  <div className="flex items-center justify-between">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={decrementSales}
+                      disabled={monthlySales <= 50000}
+                      className="h-16 w-16 rounded-xl"
+                    >
+                      <Minus className="h-6 w-6" />
+                    </Button>
+                    
+                    <div className="text-center flex-1 mx-6">
+                      <div className="text-4xl font-bold text-primary mb-1">
+                        AED {monthlySales.toLocaleString()}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        per month
+                      </div>
+                    </div>
+                    
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={incrementSales}
+                      disabled={monthlySales >= 1000000}
+                      className="h-16 w-16 rounded-xl"
+                    >
+                      <Plus className="h-6 w-6" />
+                    </Button>
+                  </div>
+                  <div className="flex justify-between text-xs text-muted-foreground mt-4 px-2">
+                    <span>Min: AED 50K</span>
+                    <span>Increments of AED 50K</span>
+                    <span>Max: AED 1M</span>
                   </div>
                 </div>
               </div>

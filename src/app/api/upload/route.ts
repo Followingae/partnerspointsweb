@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { fileUploads } from '@/lib/schema'
-import { uploadImageFile, validateImageFile } from '@/lib/upload'
+import { uploadImageFile, validateImageFile } from '@/lib/supabase-upload'
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       buffer,
       originalName: file.name,
       mimeType: file.type,
-      uploadType: uploadType as 'blog_image' | 'featured_image' | 'general',
+      uploadType: uploadType as 'blog_image' | 'featured_image' | 'general' | 'hero_image' | 'testimonial_image',
     })
 
     // Save upload record to database
