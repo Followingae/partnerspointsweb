@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+:root {
+  --font-plus-jakarta: 'Plus Jakarta Sans', sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 206 100% 15.3%; /* #0a2540 */
+    --card: 0 0% 100%;
+    --card-foreground: 206 100% 15.3%; /* #0a2540 */
+    --popover: 0 0% 100%;
+    --popover-foreground: 206 100% 15.3%; /* #0a2540 */
+    --primary: 206 100% 15.3%; /* #0a2540 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 206 100% 96%;
+    --secondary-foreground: 206 100% 15.3%; /* #0a2540 */
+    --muted: 206 30% 96%;
+    --muted-foreground: 206 20% 45%;
+    --accent: 206 30% 96%;
+    --accent-foreground: 206 100% 15.3%; /* #0a2540 */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 206 25% 85%;
+    --input: 206 25% 85%;
+    --ring: 206 100% 15.3%; /* #0a2540 */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 206 100% 15.3%; /* #0a2540 */
+    --foreground: 0 0% 98%;
+    --card: 206 100% 15.3%; /* #0a2540 */
+    --card-foreground: 0 0% 98%;
+    --popover: 206 100% 15.3%; /* #0a2540 */
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 206 100% 15.3%; /* #0a2540 */
+    --secondary: 206 50% 25%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 206 50% 25%;
+    --muted-foreground: 206 30% 70%;
+    --accent: 206 50% 25%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 206 50% 25%;
+    --input: 206 50% 25%;
+    --ring: 206 30% 70%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-plus-jakarta);
+  }
+}
+
+/* Custom utility classes for sophisticated brand styling */
+@layer utilities {
+  .text-gradient-subtle {
+    @apply bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent;
+  }
+  
+  .bg-gradient-brand {
+    @apply bg-gradient-to-br from-slate-50 via-white to-slate-100;
+  }
+  
+  .card-glass {
+    @apply bg-white/95 backdrop-blur-sm border border-slate-200/60;
+  }
+  
+  .shadow-brand {
+    box-shadow: 0 8px 25px -8px rgba(15, 23, 42, 0.08);
+  }
+  
+  .shadow-elegant {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.04), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  }
+}
