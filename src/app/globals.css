@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+:root {
+  --font-plus-jakarta: 'Plus Jakarta Sans', sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 206 100% 15.3%; /* #0a2540 */
+    --card: 0 0% 100%;
+    --card-foreground: 206 100% 15.3%; /* #0a2540 */
+    --popover: 0 0% 100%;
+    --popover-foreground: 206 100% 15.3%; /* #0a2540 */
+    --primary: 206 100% 15.3%; /* #0a2540 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 206 100% 96%;
+    --secondary-foreground: 206 100% 15.3%; /* #0a2540 */
+    --muted: 206 30% 97%;
+    --muted-foreground: 206 30% 40%;
+    --accent: 212 100% 45%;
+    --accent-foreground: 206 100% 15.3%; /* #0a2540 */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 206 25% 85%;
+    --input: 206 25% 85%;
+    --ring: 206 100% 15.3%; /* #0a2540 */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 206 100% 15.3%; /* #0a2540 */
+    --foreground: 0 0% 98%;
+    --card: 206 100% 15.3%; /* #0a2540 */
+    --card-foreground: 0 0% 98%;
+    --popover: 206 100% 15.3%; /* #0a2540 */
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 206 100% 15.3%; /* #0a2540 */
+    --secondary: 206 50% 25%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 206 50% 25%;
+    --muted-foreground: 206 30% 70%;
+    --accent: 206 50% 25%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 206 50% 25%;
+    --input: 206 50% 25%;
+    --ring: 206 30% 70%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-plus-jakarta);
+  }
+}
+
+/* Typography helpers */
+.h1 { font-size: 64px; line-height: 1.05; letter-spacing: -0.02em; }
+@media (max-width:768px){ .h1 { font-size:56px; line-height:1.08; letter-spacing:-0.01em; } }
+
+.h2 { font-size: 48px; line-height: 1.1; }
+@media (max-width:768px){ .h2 { font-size:40px; line-height:1.12; } }
+
+.h3 { font-size: 32px; line-height: 1.18; }
+@media (max-width:768px){ .h3 { font-size:28px; line-height:1.2; } }
+
+.lead { font-size: 21px; line-height: 1.55; color: hsl(var(--muted-foreground)); }
+
+/* Animation classes for modern components */
+@layer utilities {
+  /* InView animation utilities */
+  .is-inview\:opacity-100.is-inview {
+    opacity: 1;
+  }
+  
+  .is-inview\:translate-y-0.is-inview {
+    transform: translateY(0);
+  }
+  
+  .is-inview\:translate-x-0.is-inview {
+    transform: translateX(0);
+  }
+  
+  /* Animation classes */
+  .animate-hero {
+    animation: hero-appear 0.8s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  
+  .animate-slide-left {
+    animation: slide-left 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+    opacity: 0;
+  }
+}
+
+/* Animation keyframes */
+@keyframes hero-appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-left {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}

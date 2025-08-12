@@ -1,0 +1,16 @@
+{
+  "name": "Partners Points",
+  "short_name": "Partners Points",
+  "description": "Reward smarter, not cheaper with loyalty built into your payment terminal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a2540",
+  "icons": [
+    {
+      "src": "/Main-BnW.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
