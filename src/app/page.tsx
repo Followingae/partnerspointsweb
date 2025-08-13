@@ -62,6 +62,18 @@ export default function Home() {
           <BubbleBackground />
           <div className="mx-auto max-w-7xl px-2 md:px-4">
             <div className="text-center max-w-5xl mx-auto relative">
+              <InView className="animate-fade-in">
+                <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-gray-200/50 rounded-full px-3 py-1.5 shadow-sm mb-6">
+                  <span className="text-xs text-gray-600">Powered by</span>
+                  <Image
+                    src="/rfm-loyalty-logo.jpg"
+                    alt="RFM Loyalty"
+                    width={80}
+                    height={20}
+                    className="h-4 w-auto object-contain"
+                  />
+                </div>
+              </InView>
               <InView className="animate-hero">
                 <h1 className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.85] mb-6">
                   <AnimatedText
@@ -77,7 +89,7 @@ export default function Home() {
                 </p>
               </InView>
               <InView className="animate-slide-up">
-                <Button size="lg" asChild className="rounded-full px-8">
+                <Button size="lg" asChild className="px-8">
                   <Link href="/how-it-works">
                     See How it Works <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -182,12 +194,32 @@ export default function Home() {
             <div className="text-center max-w-2xl mx-auto">
               <h3 className="h3 mb-4">Quick Question?</h3>
               <p className="text-muted-foreground mb-8">"Do points expire?" → It depends on the merchant.</p>
-              <Button variant="outline" asChild className="rounded-full">
+              <Button variant="outline" asChild>
                 <Link href="/faq">View All FAQs</Link>
               </Button>
             </div>
           </Container>
         </Section>
+
+        {/* Powered by RFM Loyalty Strip */}
+        <section className="py-8 bg-muted/20">
+          <Container>
+            <InView>
+              <div className="text-center">
+                <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-gray-200/60 rounded-full px-4 py-2 shadow-sm">
+                  <span className="text-xs text-gray-600">Powered by</span>
+                  <Image
+                    src="/rfm-loyalty-logo.jpg"
+                    alt="RFM Loyalty"
+                    width={100}
+                    height={25}
+                    className="h-5 w-auto object-contain"
+                  />
+                </div>
+              </div>
+            </InView>
+          </Container>
+        </section>
       </div>
     )
   }
@@ -200,40 +232,52 @@ export default function Home() {
       <section className="relative h-[100vh] overflow-hidden">
         <div className="relative w-full h-full">
           <BubbleBackground />
-          <div className="mx-auto max-w-7xl px-4 md:px-4 h-full">
-            <div className="grid lg:grid-cols-2 gap-4 lg:gap-12 h-full items-stretch pt-32 px-6 pb-4 lg:py-0 lg:px-0">
+          <div className="container mx-auto px-4 h-full">
+            <div className="grid lg:grid-cols-2 gap-4 lg:gap-12 h-full items-stretch pt-32 px-6 pb-4 lg:py-0 lg:px-6">
               <div className="space-y-6 lg:space-y-8 flex flex-col justify-center text-center lg:text-left">
-                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-6xl xl:text-7xl font-bold lg:font-semibold tracking-tighter leading-[0.85]">
+                <InView className="animate-fade-in">
+                  <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-gray-200/50 rounded-full px-3 py-1.5 shadow-sm mb-2 justify-center lg:justify-start">
+                    <span className="text-xs text-gray-600">Powered by</span>
+                    <Image
+                      src="/rfm-loyalty-logo.jpg"
+                      alt="RFM Loyalty"
+                      width={80}
+                      height={20}
+                      className="h-4 w-auto object-contain"
+                    />
+                  </div>
+                </InView>
+                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-bold lg:font-semibold tracking-tighter leading-[0.85]">
                   <div>
                     <AnimatedText
-                      text="Loyalty built into"
+                      text="Loyalty built"
                       variant="fade"
                       stagger={0.08}
                     />
                   </div>
                   <div>
                     <AnimatedText
-                      text="payments"
+                      text="into payments"
                       variant="fade"
                       stagger={0.08}
                     />
                   </div>
                 </h1>
                 <InView className="animate-slide-up">
-                  <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-6 lg:mb-8">
+                  <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-6 lg:mb-8">
                     Reward customers at checkout. We help merchants drive repeat purchases and reduce costs with a full loyalty platform within the payment terminal
                   </p>
                 </InView>
                 <InView className="animate-slide-up">
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                    <Button size="lg" className="rounded-full px-8 py-3 text-base font-medium">
+                    <Button size="lg" className="px-8 py-3 text-base font-medium">
                       <Link href="/onboarding" className="flex items-center gap-2">
                         Get Started <ArrowRight className="h-5 w-5" />
                       </Link>
                     </Button>
-                    <Button variant="outline" className="rounded-full px-8 py-3 text-base font-medium" asChild>
+                    <Button variant="outline" size="lg" className="px-8 py-3 text-base font-medium" asChild>
                       <Link href="/calculator" className="flex items-center gap-2">
-                        Benefits Calculator
+                        Points ROI Calculator
                       </Link>
                     </Button>
                   </div>
@@ -432,7 +476,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="h2 mb-4">Your numbers, your savings</h2>
             <p className="lead mb-8">Enter your sales to see how points outperform discounts</p>
-            <Button className="rounded-full" asChild>
+            <Button asChild>
               <Link href="/calculator" className="flex items-center gap-2">
                 <Calculator className="w-5 h-5" />
                 Try Calculator
@@ -441,6 +485,26 @@ export default function Home() {
           </div>
         </Container>
       </Section>
+
+      {/* Powered by RFM Loyalty Strip */}
+      <section className="py-8 bg-muted/20">
+        <Container>
+          <InView>
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-gray-200/60 rounded-full px-4 py-2 shadow-sm">
+                <span className="text-xs text-gray-600">Powered by</span>
+                <Image
+                  src="/rfm-loyalty-logo.jpg"
+                  alt="RFM Loyalty"
+                  width={100}
+                  height={25}
+                  className="h-5 w-auto object-contain"
+                />
+              </div>
+            </div>
+          </InView>
+        </Container>
+      </section>
 
     </div>
   )

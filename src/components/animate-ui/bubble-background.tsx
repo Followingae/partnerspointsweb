@@ -16,17 +16,26 @@ interface Bubble {
 export function BubbleBackground() {
   const [bubbles, setBubbles] = useState<Bubble[]>([])
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY })
     }
 
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+  }, [mounted])
 
   useEffect(() => {
+    if (!mounted) return
+
     const colors = [
       "#6EE7F9", // Brand cyan
       "#A78BFA", // Brand purple
@@ -52,50 +61,42 @@ export function BubbleBackground() {
     }))
     
     setBubbles(newBubbles)
-  }, [])
+  }, [mounted])
+
+  if (!mounted) {
+    return <div className="absolute inset-0 overflow-hidden" />
+  }
 
   return (
     <div className="absolute inset-0 overflow-hidden">
       {bubbles.map((bubble, index) => {
         // Safety check for window object
-        const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 1920
-        const screenHeight = typeof window !== 'undefined' ? window.innerHeight : 1080
+        const screenWidth = window.innerWidth
+        const screenHeight = window.innerHeight
         
-        // Gentle mouse influence - smooth and subtle
-        const mouseInfluenceX = (mousePos.x / screenWidth - 0.5) * 120 // -60 to +60
-        const mouseInfluenceY = (mousePos.y / screenHeight - 0.5) * 120 // -60 to +60
+        // Much simpler approach - direct mouse influence with limited range
+        const mouseInfluenceX = (mousePos.x / screenWidth - 0.5) * 200 // -100 to +100
+        const mouseInfluenceY = (mousePos.y / screenHeight - 0.5) * 200 // -100 to +100
         
-        // Gentle follow strength for smooth effect
-        const followStrength = (index + 1) * 0.4 // 0.4, 0.8, 1.2, 1.6
+        // Each bubble gets different strength
+        const magnetStrength = (index + 1) * 0.3 // 0.3, 0.6, 0.9, 1.2
         
-        // Smooth following offset
-        const followX = mouseInfluenceX * followStrength
-        const followY = mouseInfluenceY * followStrength
+        // Simple movement calculation
+        const clampedX = mouseInfluenceX * magnetStrength
+        const clampedY = mouseInfluenceY * magnetStrength
         
         return (
-          <motion.div
+          <div
             key={bubble.id}
-            className="absolute rounded-full opacity-60 blur-lg cursor-pointer"
+            className="absolute rounded-full opacity-60 blur-lg cursor-pointer hover:scale-110 hover:opacity-80 transition-all duration-300"
             style={{
               left: `${bubble.x}%`,
               top: `${bubble.y}%`,
               width: `${bubble.size}px`,
               height: `${bubble.size}px`,
               background: `radial-gradient(circle, ${bubble.color} 0%, rgba(255,255,255,0) 70%)`,
-              transform: `translate(${followX}px, ${followY}px)`,
-              transition: 'transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-            }}
-            whileHover={{
-              scale: 1.8,
-              opacity: 0.9,
-              rotate: 20,
-              transition: { duration: 0.3 }
-            }}
-            transition={{
-              duration: bubble.duration,
-              delay: bubble.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
+              transform: `translate(${clampedX}px, ${clampedY}px)`,
+              transition: 'transform 0.2s ease-out, scale 0.3s ease-out, opacity 0.3s ease-out'
             }}
           />
         )

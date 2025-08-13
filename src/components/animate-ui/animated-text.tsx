@@ -1,7 +1,7 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 
 interface AnimatedTextProps {
@@ -20,8 +20,13 @@ export function AnimatedText({
   variant = "slide"
 }: AnimatedTextProps) {
   const ref = useRef(null)
+  const [mounted, setMounted] = useState(false)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
   const words = text.split(" ")
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const variants = {
     fade: {
@@ -54,14 +59,14 @@ export function AnimatedText({
       ref={ref}
       className={cn("", className)}
       variants={container}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      initial={mounted ? "hidden" : "visible"}
+      animate={mounted && isInView ? "visible" : mounted ? "hidden" : "visible"}
     >
       {words.map((word, index) => (
         <motion.span
           key={index}
           className="inline-block mr-3"
-          variants={variants[variant]}
+          variants={mounted ? variants[variant] : { hidden: { opacity: 1 }, visible: { opacity: 1 } }}
           transition={{
             duration: 0.8,
             ease: [0.25, 0.4, 0.25, 1],

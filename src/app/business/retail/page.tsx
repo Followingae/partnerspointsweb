@@ -70,12 +70,12 @@ export default function RetailPage() {
                   Partners Points runs inside your RFM Payment Terminal, so your team can award and redeem points in under 10 seconds during checkout—no extra apps, no add-on hardware, no upfront costs.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button asChild size="lg" className="rounded-full px-8 py-3 bg-black text-white hover:bg-black/90">
+                  <Button asChild size="lg" className="px-8 py-3 bg-black text-white hover:bg-black/90">
                     <Link href="/onboarding?industry=retail">
                       Start Retail Onboarding <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="rounded-full px-8 py-3 border-black/10">
+                  <Button asChild size="lg" variant="outline" className="px-8 py-3 border-black/10">
                     <Link href="/calculator?industry=retail">
                       See Retail Calculator
                     </Link>

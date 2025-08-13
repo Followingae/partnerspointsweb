@@ -33,6 +33,10 @@ export default function Navigation() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
+    
+    // Initial check
+    handleScroll();
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -102,7 +106,7 @@ export default function Navigation() {
             <div className="hidden md:flex items-center">
               <Button 
                 variant="outline" 
-                className="rounded-full px-4"
+                className="px-4"
                 onClick={() => setMode(mode === "businesses" ? "customers" : "businesses")}
               >
                 {mode === "businesses" ? "For Customers" : "For Businesses"}
