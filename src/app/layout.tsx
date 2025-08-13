@@ -5,6 +5,7 @@ import { ModeProvider } from "@/context/mode-context"
 import { Footer } from "@/components/layout/footer"
 import { StructuredData } from "@/components/seo/structured-data"
 import Navigation from "@/components/modern/Navigation"
+import { SmoothScroll } from "@/components/gsap/smooth-scroll"
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -71,9 +72,11 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <ModeProvider>
-          <Navigation />
-          <main>{children}</main>
-          <Footer />
+          <SmoothScroll>
+            <Navigation />
+            <main>{children}</main>
+            <Footer />
+          </SmoothScroll>
         </ModeProvider>
       </body>
     </html>

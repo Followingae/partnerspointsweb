@@ -31,8 +31,15 @@ export function Header() {
     : { label: "Find Merchants", href: "/merchants" }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+    <header 
+      className="sticky top-0 z-50 w-full border-b" 
+      style={{ 
+        backgroundColor: 'white',
+        background: 'white',
+        backdropFilter: 'none'
+      }}
+    >
+      <div className="w-full px-6 lg:px-12 h-16 flex items-center justify-between max-w-none">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Logo size="md" />

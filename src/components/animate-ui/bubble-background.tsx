@@ -1,11 +1,6 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { useEffect, useState, useRef } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-
-gsap.registerPlugin(ScrollTrigger)
+import { useEffect, useState } from "react"
 
 interface Bubble {
   id: number
@@ -19,10 +14,7 @@ interface Bubble {
 
 export function BubbleBackground() {
   const [bubbles, setBubbles] = useState<Bubble[]>([])
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [mounted, setMounted] = useState(false)
-  const bubbleRefs = useRef<HTMLDivElement[]>([])
-  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -31,132 +23,78 @@ export function BubbleBackground() {
   useEffect(() => {
     if (!mounted) return
 
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY })
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [mounted])
-
-  useEffect(() => {
-    if (!mounted) return
-
     const colors = [
       "#6EE7F9", // Brand cyan
       "#A78BFA", // Brand purple
-      "#10B981", // Emerald green
-      "#F59E0B", // Amber orange - 4th complementary color
+      "#8B5CF6", // Purple
+      "#3B82F6", // Blue
     ]
     
     const bubbleConfigs = [
-      { x: 65, y: 65, size: 800 },   // Bottom right - big but well positioned
-      { x: 35, y: 70, size: 700 },   // Bottom middle - large and centered
-      { x: 15, y: 65, size: 750 },   // Bottom left - big but not too far left
-      { x: 65, y: 15, size: 650 },   // Top right - large but contained
+      { x: 75, y: 10, size: 1000, duration: 15, delay: 0 },    // Top right corner (moved inward)
+      { x: -15, y: 80, size: 1100, duration: 12, delay: 3 },   // Bottom left corner  
+      { x: 80, y: 85, size: 950, duration: 14, delay: 7 },     // Bottom right corner (moved inward)
     ]
     
-    const newBubbles = Array.from({ length: 4 }, (_, i) => ({
+    const newBubbles = bubbleConfigs.map((config, i) => ({
       id: i,
-      x: bubbleConfigs[i].x,
-      y: bubbleConfigs[i].y,
-      size: bubbleConfigs[i].size,
-      duration: Math.random() * 20 + 15, // 15-35s slower for big bubbles
-      delay: Math.random() * 10,
-      color: colors[i] // Each bubble gets its own unique color
+      x: config.x,
+      y: config.y,
+      size: config.size,
+      duration: config.duration,
+      delay: config.delay,
+      color: colors[i]
     }))
     
     setBubbles(newBubbles)
   }, [mounted])
 
-  // GSAP ScrollTrigger Parallax Effect
-  useEffect(() => {
-    if (!mounted || bubbleRefs.current.length === 0) return
-
-    const ctx = gsap.context(() => {
-      bubbleRefs.current.forEach((bubble, index) => {
-        if (bubble) {
-          // Different parallax speeds for depth
-          const speed = (index + 1) * 0.3 // 0.3, 0.6, 0.9, 1.2
-          
-          gsap.to(bubble, {
-            y: -100 * speed,
-            x: -50 * speed,
-            rotation: 360 * speed,
-            scale: 1 + (speed * 0.1),
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1.5,
-              ease: "none"
-            }
-          })
-
-          // Floating animation
-          gsap.to(bubble, {
-            y: "+=20",
-            duration: 3 + index,
-            ease: "sine.inOut",
-            yoyo: true,
-            repeat: -1
-          })
-
-          // Breathing scale animation
-          gsap.to(bubble, {
-            scale: 1.05,
-            duration: 4 + index * 0.5,
-            ease: "power2.inOut",
-            yoyo: true,
-            repeat: -1
-          })
-        }
-      })
-    }, containerRef)
-
-    return () => ctx.revert()
-  }, [mounted, bubbles])
 
   if (!mounted) {
     return <div className="absolute inset-0 overflow-hidden" />
   }
 
   return (
-    <div ref={containerRef} className="absolute inset-0 overflow-hidden">
-      {bubbles.map((bubble, index) => {
-        // Safety check for window object
-        const screenWidth = window.innerWidth
-        const screenHeight = window.innerHeight
+    <div className="absolute inset-0 overflow-hidden" style={{ zIndex: -10 }}>
+      {bubbles.map((bubble) => (
+        <div
+          key={bubble.id}
+          className="absolute rounded-full animate-pulse"
+          style={{
+            left: `${bubble.x}%`,
+            top: `${bubble.y}%`,
+            width: `${bubble.size}px`,
+            height: `${bubble.size}px`,
+            background: `radial-gradient(circle, ${bubble.color}80 0%, ${bubble.color}50 50%, transparent 100%)`,
+            filter: 'blur(40px)',
+            opacity: 0.6,
+            animation: `lavaLamp-${bubble.id} ${bubble.duration}s ease-in-out infinite ${bubble.delay}s`,
+          }}
+        />
+      ))}
+      
+      <style jsx>{`
+        @keyframes lavaLamp-0 {
+          0%, 100% { transform: translate(0px, 0px) scale(1); }
+          25% { transform: translate(-120px, 80px) scale(1.3); }
+          50% { transform: translate(-150px, 150px) scale(0.7); }
+          75% { transform: translate(-80px, 120px) scale(1.15); }
+        }
         
-        // Much simpler approach - direct mouse influence with limited range
-        const mouseInfluenceX = (mousePos.x / screenWidth - 0.5) * 50 // Reduced for GSAP compatibility
-        const mouseInfluenceY = (mousePos.y / screenHeight - 0.5) * 50 // Reduced for GSAP compatibility
+        @keyframes lavaLamp-1 {
+          0%, 100% { transform: translate(0px, 0px) scale(1); }
+          25% { transform: translate(140px, -100px) scale(0.8); }
+          50% { transform: translate(100px, -160px) scale(1.4); }
+          75% { transform: translate(160px, -60px) scale(0.9); }
+        }
         
-        // Each bubble gets different strength
-        const magnetStrength = (index + 1) * 0.2 // Reduced for smoother interaction
-        
-        // Simple movement calculation
-        const clampedX = mouseInfluenceX * magnetStrength
-        const clampedY = mouseInfluenceY * magnetStrength
-        
-        return (
-          <div
-            key={bubble.id}
-            ref={(el) => {
-              if (el) bubbleRefs.current[index] = el
-            }}
-            className="absolute rounded-full opacity-60 blur-lg will-change-transform"
-            style={{
-              left: `${bubble.x}%`,
-              top: `${bubble.y}%`,
-              width: `${bubble.size}px`,
-              height: `${bubble.size}px`,
-              background: `radial-gradient(circle, ${bubble.color} 0%, rgba(255,255,255,0) 70%)`,
-              transform: `translate(${clampedX}px, ${clampedY}px)`,
-            }}
-          />
-        )
-      })}
+        @keyframes lavaLamp-2 {
+          0%, 100% { transform: translate(0px, 0px) scale(1); }
+          25% { transform: translate(-140px, -80px) scale(1.25); }
+          50% { transform: translate(-100px, -140px) scale(0.75); }
+          75% { transform: translate(-160px, -100px) scale(1.1); }
+        }
+      `}</style>
     </div>
   )
 }

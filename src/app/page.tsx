@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useMode } from "@/context/mode-context";
@@ -18,10 +19,24 @@ import InteractiveBlock from "@/components/modern/InteractiveBlock";
 import StepBlock from "@/components/modern/StepBlock";
 import { AnimatedText } from "@/components/animate-ui/animated-text";
 import StandardSection from "@/components/modern/StandardSection";
-import { StaggeredText } from "@/components/animate-ui/staggered-text";
+import { HeroDeviceInteractions } from "@/components/gsap/hero-device-interactions";
 
 export default function Home() {
   const { mode } = useMode()
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+  const mobileRef = useRef<HTMLDivElement>(null)
+  const terminalRef = useRef<HTMLDivElement>(null)
 
   // Chart data - realistic business metrics
   const costComparisonData = [
@@ -61,43 +76,58 @@ export default function Home() {
     return (
       <div className="min-h-screen">
         {/* Customer Hero Section */}
-        <section className="relative h-[100vh] flex items-center justify-center overflow-hidden">
-          <BubbleBackground />
-          <div className="mx-auto max-w-7xl px-2 md:px-4">
-            <div className="text-center max-w-5xl mx-auto relative">
-              <InView className="animate-hero">
-                <StaggeredText 
-                  className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.85] mb-6"
-                  trigger="scroll"
-                  duration={1.2}
-                >
-                  Earn points every time you shop
-                </StaggeredText>
-              </InView>
-              <InView className="animate-slide-up">
-                <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  Redeem at your favorite places — no gimmicks, no hidden rules
-                </p>
-              </InView>
-              <InView className="animate-slide-up">
-                <Button size="lg" asChild className="px-8 mb-6">
-                  <Link href="/how-it-works">
-                    See How it Works <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </InView>
-              <InView className="animate-fade-in">
-                <Badge variant="outline" className="bg-white/80 backdrop-blur-md border-gray-200/50 shadow-sm px-3 py-1.5 text-xs text-gray-600 gap-2">
-                  Powered by
+        <section className="relative h-[100vh] overflow-hidden">
+          <div className="relative w-full h-full">
+            <BubbleBackground />
+            <div className="container mx-auto px-4 h-full">
+              <div className="grid lg:grid-cols-2 gap-4 lg:gap-12 h-full items-stretch pt-32 px-6 pb-4 lg:py-0 lg:px-6">
+                <div className="space-y-6 lg:space-y-8 flex flex-col justify-center text-center lg:text-left">
+                  <h1 className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.85]">
+                    Earn points every time you shop
+                  </h1>
+                  <InView className="animate-slide-up">
+                    <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-6 lg:mb-8">
+                      Redeem at your favorite places — no gimmicks, no hidden rules
+                    </p>
+                  </InView>
+                  <InView className="animate-slide-up">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-6">
+                      <Button size="lg" className="px-8 py-3 text-base font-medium">
+                        <Link href="/how-it-works" className="flex items-center gap-2">
+                          See How it Works <ArrowRight className="h-5 w-5" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </InView>
+                  <InView className="animate-fade-in">
+                    <Badge variant="outline" className="bg-white/80 backdrop-blur-md border-gray-200/50 shadow-sm px-3 py-1.5 text-xs text-gray-600 gap-2 justify-center lg:justify-start">
+                      Powered by
+                      <Image
+                        src="/rfm-loyalty-logo.jpg"
+                        alt="RFM Loyalty"
+                        width={90}
+                        height={24}
+                        className="h-5 w-auto object-contain"
+                      />
+                    </Badge>
+                  </InView>
+                </div>
+
+                {/* Hero Image */}
+                <InView className="animate-slide-left h-full flex items-end justify-center lg:justify-start">
                   <Image
-                    src="/rfm-loyalty-logo.jpg"
-                    alt="RFM Loyalty"
-                    width={90}
-                    height={24}
-                    className="h-5 w-auto object-contain"
+                    src="/partnerspointscustomersearned1.png"
+                    alt="Partners Points customers earned"
+                    width={800}
+                    height={600}
+                    className="w-full max-w-md sm:max-w-lg lg:max-w-none h-auto object-contain"
+                    style={{
+                      maxHeight: '85%'
+                    }}
+                    priority
                   />
-                </Badge>
-              </InView>
+                </InView>
+              </div>
             </div>
           </div>
         </section>
@@ -238,32 +268,20 @@ export default function Home() {
           <div className="container mx-auto px-4 h-full">
             <div className="grid lg:grid-cols-2 gap-4 lg:gap-12 h-full items-stretch pt-32 px-6 pb-4 lg:py-0 lg:px-6">
               <div className="space-y-6 lg:space-y-8 flex flex-col justify-center text-center lg:text-left">
-                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-bold lg:font-semibold tracking-tighter leading-[0.85]">
+                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-bold lg:font-semibold tracking-tighter leading-[0.85] animate-fade-in" style={{ animationDelay: '0.3s' }}>
                   <div className="mb-2">
-                    <StaggeredText 
-                      trigger="scroll"
-                      duration={1.0}
-                      delay={0.2}
-                    >
-                      Loyalty built
-                    </StaggeredText>
+                    Loyalty built
                   </div>
                   <div>
-                    <StaggeredText 
-                      trigger="scroll"
-                      duration={1.0}
-                      delay={0.6}
-                    >
-                      into payments
-                    </StaggeredText>
+                    into payments
                   </div>
                 </h1>
-                <InView className="animate-slide-up">
+                <div className="animate-slide-up" style={{ animationDelay: '1s' }}>
                   <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-6 lg:mb-8">
                     Reward customers at checkout. We help merchants drive repeat purchases and reduce costs with a full loyalty platform within the payment terminal
                   </p>
-                </InView>
-                <InView className="animate-slide-up">
+                </div>
+                <div className="animate-slide-up" style={{ animationDelay: '1.3s' }}>
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-6">
                     <Button size="lg" className="px-8 py-3 text-base font-medium">
                       <Link href="/onboarding" className="flex items-center gap-2">
@@ -276,8 +294,8 @@ export default function Home() {
                       </Link>
                     </Button>
                   </div>
-                </InView>
-                <InView className="animate-fade-in">
+                </div>
+                <div className="animate-fade-in" style={{ animationDelay: '1.6s' }}>
                   <Badge variant="outline" className="bg-white/80 backdrop-blur-md border-gray-200/50 shadow-sm px-3 py-1.5 text-xs text-gray-600 gap-2 justify-center lg:justify-start">
                     Powered by
                     <Image
@@ -288,23 +306,52 @@ export default function Home() {
                       className="h-5 w-auto object-contain"
                     />
                   </Badge>
-                </InView>
+                </div>
               </div>
 
-              {/* Hero Image */}
-              <InView className="animate-slide-left h-full flex items-end justify-center lg:justify-start">
-                <Image
-                  src="/partnerspointscustomersearned1.png"
-                  alt="Partners Points customers earned"
-                  width={800}
-                  height={600}
-                  className="w-full max-w-md sm:max-w-lg lg:max-w-none h-auto object-contain"
-                  style={{
-                    maxHeight: '85%'
-                  }}
-                  priority
-                />
-              </InView>
+              {/* Multi-Image Hero Component */}
+              <div className="animate-slide-left relative h-full" style={{ animationDelay: '1.9s' }}>
+                <div className="relative w-full h-full flex items-center justify-end">
+                  {/* GSAP Device Interactions - behind devices */}
+                  <HeroDeviceInteractions 
+                    mobileRef={mobileRef} 
+                    terminalRef={terminalRef} 
+                  />
+
+                  {/* Mobile Phone - Top Right */}
+                  <div ref={mobileRef} className="mobile-device absolute top-1/4 right-4 lg:right-8" style={{ zIndex: 60 }}>
+                    <Image
+                      src="/userapppartnerspoints.png"
+                      alt="Partners Points mobile app"
+                      width={600}
+                      height={400}
+                      className="object-contain"
+                      style={{
+                        maxHeight: isMobile ? '30vh' : '45vh',
+                        width: 'auto'
+                      }}
+                      priority
+                    />
+                  </div>
+
+                  {/* Payment Terminal - Bottom Left */}
+                  <div ref={terminalRef} className="terminal-device absolute bottom-4 left-4 lg:bottom-8 lg:left-20" style={{ zIndex: 60 }}>
+                    <Image
+                      src="/rfmpaymentpos.png"
+                      alt="RFM Payment POS Terminal"
+                      width={400}
+                      height={300}
+                      className="object-contain"
+                      style={{
+                        maxHeight: isMobile ? '35vh' : '60vh',
+                        width: 'auto'
+                      }}
+                      priority
+                    />
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
