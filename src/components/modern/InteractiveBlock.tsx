@@ -29,11 +29,11 @@ export default function InteractiveBlock({
     >
       <UnifiedCard 
         variant={variant}
-        className={cn("group hover:-translate-y-1 transition-transform duration-300", className)}
+        className={cn("group", className)}
       >
         <div className="space-y-4">
           {icon && (
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 text-primary group-hover:bg-primary/15 transition-colors duration-300">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 text-primary">
               {icon}
             </div>
           )}

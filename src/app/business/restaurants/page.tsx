@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ArrowRight, Shield, TrendingUp, Zap, Gift, Users, Clock, Star, Quote, Utensils, CheckCircle, DollarSign, BarChart3, Calculator, FileText, Lightbulb, Target, Settings, HelpCircle } from "lucide-react";
 import { FadeIn } from "@/components/animate-ui/fade-in";
 import { AnimatedText } from "@/components/animate-ui/animated-text";
+import StandardSection from "@/components/modern/StandardSection";
 import { CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { type ChartConfig } from "@/components/ui/chart";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, BarChart, Bar, AreaChart, Area, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/charts/ClientChart";
@@ -72,13 +73,13 @@ export default function RestaurantsPage() {
                   Partners Points is inside your RFM Payment Terminal, so servers can award or redeem points in seconds when presenting the terminal. No extra devices. No staff app juggling. Just faster repeat visits.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button asChild size="lg" className="px-8 py-3 bg-black text-white hover:bg-black/90">
+                  <Button asChild size="lg" className="px-8 py-3 bg-blue-900 text-white hover:bg-blue-900/90">
                     <Link href="/onboarding?industry=restaurants">
                       Start Restaurant Onboarding <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="px-8 py-3 border-black/10">
-                    <Link href="/calculator?industry=restaurants">
+                  <Button asChild size="lg" variant="outline" className="px-8 py-3 border-blue-900/10">
+                    <Link href="/pricing">
                       See Restaurant Calculator
                     </Link>
                   </Button>

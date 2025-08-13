@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Shield, TrendingUp, Gift, Zap, Users, Calculator, Star, Quote, ArrowRight, CheckCircle, Clock, Target, DollarSign, BarChart3, Lightbulb, FileText, BookOpen, Settings, HelpCircle } from "lucide-react";
 import { FadeIn } from "@/components/animate-ui/fade-in";
+import StandardSection from "@/components/modern/StandardSection";
 import { CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { type ChartConfig } from "@/components/ui/chart";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, BarChart, Bar, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/charts/ClientChart";
@@ -70,13 +71,13 @@ export default function RetailPage() {
                   Partners Points runs inside your RFM Payment Terminal, so your team can award and redeem points in under 10 seconds during checkout—no extra apps, no add-on hardware, no upfront costs.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button asChild size="lg" className="px-8 py-3 bg-black text-white hover:bg-black/90">
+                  <Button asChild size="lg" className="px-8 py-3 bg-blue-900 text-white hover:bg-blue-900/90">
                     <Link href="/onboarding?industry=retail">
                       Start Retail Onboarding <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="px-8 py-3 border-black/10">
-                    <Link href="/calculator?industry=retail">
+                  <Button asChild size="lg" variant="outline" className="px-8 py-3 border-blue-900/10">
+                    <Link href="/pricing">
                       See Retail Calculator
                     </Link>
                   </Button>
@@ -185,82 +186,54 @@ export default function RetailPage() {
       </Section>
 
       {/* How It Works at Retail Checkout */}
-      <Section className="bg-gray-50">
-        <Container>
-          <div className="text-center mb-16">
-            <InView className="opacity-0 translate-y-3 is-inview:opacity-100 is-inview:translate-y-0 transition-all duration-500">
-              <h2 className="h2 font-bold mb-6">
-                Loyalty in the same 10-second window as payment.
-              </h2>
-            </InView>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-            <FadeIn direction="up" delay={0.1}>
-              <div className="space-y-6">
-                <div className="space-y-4">
-                  {[
-                    "Customer pays as usual on your RFM Payment Terminal.",
-                    "Cashier enters the customer's phone number (or scans a loyalty code).",
-                    "Profile appears instantly—visit count, spend triggers, available rewards.",
-                    "Award or redeem points without leaving the payment screen.",
-                    "Everything syncs in real time to your Merchant Portal and the customer app."
-                  ].map((step, index) => (
-                    <div key={index} className="flex gap-4">
-                      <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0">
-                        {index + 1}
-                      </div>
-                      <p className="text-muted-foreground">{step}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="bg-primary/10 p-4 rounded-lg">
-                  <p className="text-primary font-semibold">
-                    No integrations. No new software. It's already in your terminal.
-                  </p>
-                </div>
-              </div>
-            </FadeIn>
-
-            <FadeIn direction="left" delay={0.2}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Checkout Flow Timeline</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64">
-                    <ChartContainer config={chartConfig} className="h-full w-full">
-                      <ResponsiveContainer>
-                        <LineChart data={checkoutFlowData}>
-                          <XAxis dataKey="step" angle={-45} textAnchor="end" height={80} />
-                          <YAxis label={{ value: 'Seconds', angle: -90, position: 'insideLeft' }} />
-                          <ChartTooltip 
-                            content={
-                              <ChartTooltipContent 
-                                formatter={(value) => [`${value}s`, 'Time']}
-                              />
-                            }
-                          />
-                          <Line 
-                            type="monotone" 
-                            dataKey="time" 
-                            stroke="hsl(var(--primary))" 
-                            strokeWidth={3}
-                            dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </ChartContainer>
-                  </div>
-                  <p className="text-sm text-muted-foreground text-center mt-4">
-                    Total time: Under 10 seconds
-                  </p>
-                </CardContent>
-              </Card>
-            </FadeIn>
-          </div>
-        </Container>
-      </Section>
+      <StandardSection
+        className="bg-gray-50"
+        badge="Retail"
+        heading="Loyalty in the same 10-second window as payment"
+        description="No integrations. No new software. It's already in your terminal. Because Partners Points lives inside your RFM Payment Terminal, there's no extra training required."
+        ctaText="Start Retail Onboarding"
+        ctaHref="/onboarding?industry=retail"
+        seeAlsoLinks={[
+          { text: "Calculator", href: "/pricing", description: "for retail ROI projections" },
+          { text: "Features", href: "/features", description: "for complete feature list" }
+        ]}
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle>Checkout Flow Timeline</CardTitle>
+            <CardDescription>Real-time loyalty processing</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-64">
+              <ChartContainer config={chartConfig} className="h-full w-full">
+                <ResponsiveContainer>
+                  <LineChart data={checkoutFlowData}>
+                    <XAxis dataKey="step" angle={-45} textAnchor="end" height={80} />
+                    <YAxis label={{ value: 'Seconds', angle: -90, position: 'insideLeft' }} />
+                    <ChartTooltip 
+                      content={
+                        <ChartTooltipContent 
+                          formatter={(value) => [`${value}s`, 'Time']}
+                        />
+                      }
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="time" 
+                      stroke="hsl(var(--primary))" 
+                      strokeWidth={3}
+                      dot={{ fill: 'hsl(var(--primary))', strokeWidth: 2, r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </div>
+            <p className="text-sm text-muted-foreground text-center mt-4">
+              Total time: Under 10 seconds
+            </p>
+          </CardContent>
+        </Card>
+      </StandardSection>
 
       {/* Retail Use Cases */}
       <section className="py-16">

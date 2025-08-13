@@ -243,7 +243,7 @@ export default function FAQPage() {
                 </Link>
               </Button>
               <Button asChild variant="outline">
-                <Link href="/calculator">
+                <Link href="/pricing">
                   Try Calculator
                 </Link>
               </Button>

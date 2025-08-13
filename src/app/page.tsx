@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useMode } from "@/context/mode-context";
 import type { ChartConfig } from "@/components/ui/chart";
 import { ArrowRight, TrendingUp, TrendingDown, Shield, Zap, Users, Gift, Calculator, CheckCircle, Star, Quote, Store, Settings } from "lucide-react";
@@ -16,6 +17,8 @@ import Container from "@/components/modern/Container";
 import InteractiveBlock from "@/components/modern/InteractiveBlock";
 import StepBlock from "@/components/modern/StepBlock";
 import { AnimatedText } from "@/components/animate-ui/animated-text";
+import StandardSection from "@/components/modern/StandardSection";
+import { StaggeredText } from "@/components/animate-ui/staggered-text";
 
 export default function Home() {
   const { mode } = useMode()
@@ -62,26 +65,14 @@ export default function Home() {
           <BubbleBackground />
           <div className="mx-auto max-w-7xl px-2 md:px-4">
             <div className="text-center max-w-5xl mx-auto relative">
-              <InView className="animate-fade-in">
-                <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-gray-200/50 rounded-full px-3 py-1.5 shadow-sm mb-6">
-                  <span className="text-xs text-gray-600">Powered by</span>
-                  <Image
-                    src="/rfm-loyalty-logo.jpg"
-                    alt="RFM Loyalty"
-                    width={80}
-                    height={20}
-                    className="h-4 w-auto object-contain"
-                  />
-                </div>
-              </InView>
               <InView className="animate-hero">
-                <h1 className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.85] mb-6">
-                  <AnimatedText
-                    text="Earn points every time you shop"
-                    variant="slide"
-                    stagger={0.08}
-                  />
-                </h1>
+                <StaggeredText 
+                  className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.85] mb-6"
+                  trigger="scroll"
+                  duration={1.2}
+                >
+                  Earn points every time you shop
+                </StaggeredText>
               </InView>
               <InView className="animate-slide-up">
                 <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -89,11 +80,23 @@ export default function Home() {
                 </p>
               </InView>
               <InView className="animate-slide-up">
-                <Button size="lg" asChild className="px-8">
+                <Button size="lg" asChild className="px-8 mb-6">
                   <Link href="/how-it-works">
                     See How it Works <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
+              </InView>
+              <InView className="animate-fade-in">
+                <Badge variant="outline" className="bg-white/80 backdrop-blur-md border-gray-200/50 shadow-sm px-3 py-1.5 text-xs text-gray-600 gap-2">
+                  Powered by
+                  <Image
+                    src="/rfm-loyalty-logo.jpg"
+                    alt="RFM Loyalty"
+                    width={90}
+                    height={24}
+                    className="h-5 w-auto object-contain"
+                  />
+                </Badge>
               </InView>
             </div>
           </div>
@@ -206,8 +209,8 @@ export default function Home() {
           <Container>
             <InView>
               <div className="text-center">
-                <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-gray-200/60 rounded-full px-4 py-2 shadow-sm">
-                  <span className="text-xs text-gray-600">Powered by</span>
+                <Badge variant="outline" className="bg-white/90 backdrop-blur-md border-gray-200/60 shadow-sm px-4 py-2 text-xs text-gray-600 gap-2">
+                  Powered by
                   <Image
                     src="/rfm-loyalty-logo.jpg"
                     alt="RFM Loyalty"
@@ -215,7 +218,7 @@ export default function Home() {
                     height={25}
                     className="h-5 w-auto object-contain"
                   />
-                </div>
+                </Badge>
               </div>
             </InView>
           </Container>
@@ -235,32 +238,24 @@ export default function Home() {
           <div className="container mx-auto px-4 h-full">
             <div className="grid lg:grid-cols-2 gap-4 lg:gap-12 h-full items-stretch pt-32 px-6 pb-4 lg:py-0 lg:px-6">
               <div className="space-y-6 lg:space-y-8 flex flex-col justify-center text-center lg:text-left">
-                <InView className="animate-fade-in">
-                  <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-gray-200/50 rounded-full px-3 py-1.5 shadow-sm mb-2 justify-center lg:justify-start">
-                    <span className="text-xs text-gray-600">Powered by</span>
-                    <Image
-                      src="/rfm-loyalty-logo.jpg"
-                      alt="RFM Loyalty"
-                      width={80}
-                      height={20}
-                      className="h-4 w-auto object-contain"
-                    />
-                  </div>
-                </InView>
                 <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl font-bold lg:font-semibold tracking-tighter leading-[0.85]">
-                  <div>
-                    <AnimatedText
-                      text="Loyalty built"
-                      variant="fade"
-                      stagger={0.08}
-                    />
+                  <div className="mb-2">
+                    <StaggeredText 
+                      trigger="scroll"
+                      duration={1.0}
+                      delay={0.2}
+                    >
+                      Loyalty built
+                    </StaggeredText>
                   </div>
                   <div>
-                    <AnimatedText
-                      text="into payments"
-                      variant="fade"
-                      stagger={0.08}
-                    />
+                    <StaggeredText 
+                      trigger="scroll"
+                      duration={1.0}
+                      delay={0.6}
+                    >
+                      into payments
+                    </StaggeredText>
                   </div>
                 </h1>
                 <InView className="animate-slide-up">
@@ -269,18 +264,30 @@ export default function Home() {
                   </p>
                 </InView>
                 <InView className="animate-slide-up">
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-6">
                     <Button size="lg" className="px-8 py-3 text-base font-medium">
                       <Link href="/onboarding" className="flex items-center gap-2">
                         Get Started <ArrowRight className="h-5 w-5" />
                       </Link>
                     </Button>
                     <Button variant="outline" size="lg" className="px-8 py-3 text-base font-medium" asChild>
-                      <Link href="/calculator" className="flex items-center gap-2">
+                      <Link href="/pricing" className="flex items-center gap-2">
                         Points ROI Calculator
                       </Link>
                     </Button>
                   </div>
+                </InView>
+                <InView className="animate-fade-in">
+                  <Badge variant="outline" className="bg-white/80 backdrop-blur-md border-gray-200/50 shadow-sm px-3 py-1.5 text-xs text-gray-600 gap-2 justify-center lg:justify-start">
+                    Powered by
+                    <Image
+                      src="/rfm-loyalty-logo.jpg"
+                      alt="RFM Loyalty"
+                      width={90}
+                      height={24}
+                      className="h-5 w-auto object-contain"
+                    />
+                  </Badge>
                 </InView>
               </div>
 
@@ -315,12 +322,12 @@ export default function Home() {
               />
             </h2>
             <p className="lead">
-              Discounts slash your margins — for every customer, every time. Points change the game: you only incur cost when points are redeemed, meaning your rewards directly track with true customer loyalty
+              Pay for rewards only when customers redeem—not for every sale like discounts
             </p>
           </div>
           <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             <InteractiveBlock
-              icon={<TrendingDown className="w-6 h-6" />}
+              icon={<TrendingDown className="w-6 h-6 text-blue-600" />}
               title="Traditional discounts"
               description="Discounts slash profit from every sale, even for one-time customers who never return"
               variant="default"
@@ -328,7 +335,7 @@ export default function Home() {
             />
             
             <InteractiveBlock
-              icon={<TrendingUp className="w-6 h-6" />}
+              icon={<TrendingUp className="w-6 h-6 text-blue-600" />}
               title="Smart points system"
               description="Points reward loyalty — you only pay when customers actually redeem their rewards"
               variant="default"
@@ -339,82 +346,48 @@ export default function Home() {
       </Section>
 
       {/* How It Works - Business */}
-      <Section className="bg-muted/30">
-        <Container>
-          <div className="grid lg:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
-            {/* Text Content */}
-            <InView className="animate-slide-up">
-              <div className="space-y-8">
-                <div>
-                  <h2 className="h2 mb-6">
-                    How It Works
-                  </h2>
-                  <p className="lead">
-                    Because Partners Points lives inside your RFM Payment Terminal, there's no integration project, no new system to learn, and no extra device on your counter
-                  </p>
-                </div>
-                
-                {/* Steps */}
-                <div className="space-y-4">
-                  <StepBlock
-                    step={1}
-                    title="Customer pays as normal"
-                    description="On your RFM Payment Terminal — the same device you already use"
-                    delay={100}
-                  />
-                  
-                  <StepBlock
-                    step={2}
-                    title="Staff enters customer number"
-                    description="Quick entry during payment — loyalty profile appears instantly"
-                    delay={200}
-                  />
-                  
-                  <StepBlock
-                    step={3}
-                    title="Award or redeem points"
-                    description="All without leaving the checkout flow — everything syncs in real time"
-                    delay={300}
-                    isLast={true}
-                  />
-                </div>
-              </div>
-            </InView>
-            
-            {/* Visual */}
-            <InView className="animate-slide-left">
-              <Card className="overflow-hidden">
-                <div className="p-8">
-                  <div className="text-center space-y-6">
-                    <div className="bg-muted/30 p-6 rounded-xl border border-border">
-                      <div className="text-lg font-semibold text-primary mb-4">RFM Payment Terminal</div>
-                      <div className="bg-white p-4 rounded-lg border text-sm space-y-3">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-green-600 font-medium">Customer Profile Loaded</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <span className="text-blue-600 font-medium">5th Visit Detected</span>
-                        </div>
-                        <div className="border-t pt-3 mt-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm">Award 250 pts</span>
-                            <span className="text-sm text-accent font-bold">or Redeem 20 AED</span>
-                          </div>
-                        </div>
-                      </div>
+      <StandardSection
+        className="bg-muted/30"
+        badge="Business"
+        heading="How It Works"
+        description="Because Partners Points lives inside your RFM Payment Terminal, there's no integration project, no new system to learn, and no extra device on your counter."
+        ctaText="Start Onboarding"
+        ctaHref="/onboarding"
+        seeAlsoLinks={[
+          { text: "Terminal", href: "/features", description: "for custom in-person payments" },
+          { text: "Pricing", href: "/pricing", description: "for transparent fee structure" },
+          { text: "Use Cases", href: "/use-cases", description: "for industry examples" }
+        ]}
+      >
+        <Card className="overflow-hidden">
+          <div className="p-8">
+            <div className="text-center space-y-6">
+              <div className="bg-muted/30 p-6 rounded-xl border border-border">
+                <div className="text-lg font-semibold text-primary mb-4">RFM Payment Terminal</div>
+                <div className="bg-white p-4 rounded-lg border text-sm space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-green-600 font-medium">Customer Profile Loaded</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    <span className="text-blue-600 font-medium">5th Visit Detected</span>
+                  </div>
+                  <div className="border-t pt-3 mt-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Award 250 pts</span>
+                      <span className="text-sm text-accent font-bold">or Redeem 20 AED</span>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      Real-time loyalty processing at checkout
-                    </p>
                   </div>
                 </div>
-              </Card>
-            </InView>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Real-time loyalty processing at checkout
+              </p>
+            </div>
           </div>
-        </Container>
-      </Section>
+        </Card>
+      </StandardSection>
 
       {/* Key Benefits */}
       <Section>
@@ -477,7 +450,7 @@ export default function Home() {
             <h2 className="h2 mb-4">Your numbers, your savings</h2>
             <p className="lead mb-8">Enter your sales to see how points outperform discounts</p>
             <Button asChild>
-              <Link href="/calculator" className="flex items-center gap-2">
+              <Link href="/pricing" className="flex items-center gap-2">
                 <Calculator className="w-5 h-5" />
                 Try Calculator
               </Link>
@@ -491,8 +464,8 @@ export default function Home() {
         <Container>
           <InView>
             <div className="text-center">
-              <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-gray-200/60 rounded-full px-4 py-2 shadow-sm">
-                <span className="text-xs text-gray-600">Powered by</span>
+              <Badge variant="outline" className="bg-white/90 backdrop-blur-md border-gray-200/60 shadow-sm px-4 py-2 text-xs text-gray-600 gap-2">
+                Powered by
                 <Image
                   src="/rfm-loyalty-logo.jpg"
                   alt="RFM Loyalty"
@@ -500,7 +473,7 @@ export default function Home() {
                   height={25}
                   className="h-5 w-auto object-contain"
                 />
-              </div>
+              </Badge>
             </div>
           </InView>
         </Container>

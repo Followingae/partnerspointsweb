@@ -3,7 +3,6 @@ import Link from "next/link"
 
 const footerLinks = {
   product: [
-    { label: "Calculator", href: "/calculator" },
     { label: "Pricing", href: "/pricing" },
     { label: "Use Cases", href: "/use-cases" },
     { label: "Onboarding", href: "/onboarding" },
@@ -39,8 +38,8 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Product</h3>
             <ul className="space-y-3">
-              {footerLinks.product.map((link) => (
-                <li key={link.href}>
+              {footerLinks.product.map((link, index) => (
+                <li key={`product-${index}`}>
                   <Link 
                     href={link.href}
                     className="text-sm text-background/70 hover:text-background transition-colors"
@@ -56,8 +55,8 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Resources</h3>
             <ul className="space-y-3">
-              {footerLinks.resources.map((link) => (
-                <li key={link.href}>
+              {footerLinks.resources.map((link, index) => (
+                <li key={`resources-${index}`}>
                   <Link 
                     href={link.href}
                     className="text-sm text-background/70 hover:text-background transition-colors"
@@ -73,8 +72,8 @@ export function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Legal</h3>
             <ul className="space-y-3">
-              {footerLinks.legal.map((link) => (
-                <li key={link.href}>
+              {footerLinks.legal.map((link, index) => (
+                <li key={`legal-${index}`}>
                   <Link 
                     href={link.href}
                     className="text-sm text-background/70 hover:text-background transition-colors"

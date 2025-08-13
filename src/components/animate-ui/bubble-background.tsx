@@ -1,7 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface Bubble {
   id: number
@@ -17,6 +21,8 @@ export function BubbleBackground() {
   const [bubbles, setBubbles] = useState<Bubble[]>([])
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [mounted, setMounted] = useState(false)
+  const bubbleRefs = useRef<HTMLDivElement[]>([])
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -63,23 +69,71 @@ export function BubbleBackground() {
     setBubbles(newBubbles)
   }, [mounted])
 
+  // GSAP ScrollTrigger Parallax Effect
+  useEffect(() => {
+    if (!mounted || bubbleRefs.current.length === 0) return
+
+    const ctx = gsap.context(() => {
+      bubbleRefs.current.forEach((bubble, index) => {
+        if (bubble) {
+          // Different parallax speeds for depth
+          const speed = (index + 1) * 0.3 // 0.3, 0.6, 0.9, 1.2
+          
+          gsap.to(bubble, {
+            y: -100 * speed,
+            x: -50 * speed,
+            rotation: 360 * speed,
+            scale: 1 + (speed * 0.1),
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1.5,
+              ease: "none"
+            }
+          })
+
+          // Floating animation
+          gsap.to(bubble, {
+            y: "+=20",
+            duration: 3 + index,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1
+          })
+
+          // Breathing scale animation
+          gsap.to(bubble, {
+            scale: 1.05,
+            duration: 4 + index * 0.5,
+            ease: "power2.inOut",
+            yoyo: true,
+            repeat: -1
+          })
+        }
+      })
+    }, containerRef)
+
+    return () => ctx.revert()
+  }, [mounted, bubbles])
+
   if (!mounted) {
     return <div className="absolute inset-0 overflow-hidden" />
   }
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden">
       {bubbles.map((bubble, index) => {
         // Safety check for window object
         const screenWidth = window.innerWidth
         const screenHeight = window.innerHeight
         
         // Much simpler approach - direct mouse influence with limited range
-        const mouseInfluenceX = (mousePos.x / screenWidth - 0.5) * 200 // -100 to +100
-        const mouseInfluenceY = (mousePos.y / screenHeight - 0.5) * 200 // -100 to +100
+        const mouseInfluenceX = (mousePos.x / screenWidth - 0.5) * 50 // Reduced for GSAP compatibility
+        const mouseInfluenceY = (mousePos.y / screenHeight - 0.5) * 50 // Reduced for GSAP compatibility
         
         // Each bubble gets different strength
-        const magnetStrength = (index + 1) * 0.3 // 0.3, 0.6, 0.9, 1.2
+        const magnetStrength = (index + 1) * 0.2 // Reduced for smoother interaction
         
         // Simple movement calculation
         const clampedX = mouseInfluenceX * magnetStrength
@@ -88,7 +142,10 @@ export function BubbleBackground() {
         return (
           <div
             key={bubble.id}
-            className="absolute rounded-full opacity-60 blur-lg cursor-pointer hover:scale-110 hover:opacity-80 transition-all duration-300"
+            ref={(el) => {
+              if (el) bubbleRefs.current[index] = el
+            }}
+            className="absolute rounded-full opacity-60 blur-lg will-change-transform"
             style={{
               left: `${bubble.x}%`,
               top: `${bubble.y}%`,
@@ -96,7 +153,6 @@ export function BubbleBackground() {
               height: `${bubble.size}px`,
               background: `radial-gradient(circle, ${bubble.color} 0%, rgba(255,255,255,0) 70%)`,
               transform: `translate(${clampedX}px, ${clampedY}px)`,
-              transition: 'transform 0.2s ease-out, scale 0.3s ease-out, opacity 0.3s ease-out'
             }}
           />
         )

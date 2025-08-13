@@ -92,7 +92,7 @@ export default function SupermarketsPage() {
                     </Link>
                   </Button>
                   <Button asChild size="lg" variant="outline" className="text-lg px-8 py-6">
-                    <Link href="/calculator?industry=supermarkets">
+                    <Link href="/pricing">
                       See Supermarket Calculator
                     </Link>
                   </Button>

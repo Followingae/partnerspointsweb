@@ -27,7 +27,8 @@
       "Bash(mv:*)",
       "Bash(git push:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(find:*)"
     ],
     "deny": []
   }

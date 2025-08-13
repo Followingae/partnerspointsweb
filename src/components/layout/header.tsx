@@ -10,7 +10,6 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 const businessNav = [
-  { label: "Calculator", href: "/calculator" },
   { label: "Pricing", href: "/pricing" },
   { label: "Use Cases", href: "/use-cases" },
   { label: "FAQ", href: "/faq" },
@@ -41,9 +40,9 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
+          {navItems.map((item, index) => (
             <Link
-              key={item.href}
+              key={`nav-${index}`}
               href={item.href}
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
@@ -102,9 +101,9 @@ export function Header() {
           
           {/* Navigation */}
           <div className="flex-1 space-y-6">
-            {navItems.map((item) => (
+            {navItems.map((item, index) => (
               <Button
-                key={item.href}
+                key={`mobile-nav-${index}`}
                 variant="ghost"
                 asChild
                 className="w-full justify-start text-2xl font-semibold"

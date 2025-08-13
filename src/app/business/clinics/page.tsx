@@ -79,7 +79,7 @@ export default function ClinicsPage() {
                     </Link>
                   </Button>
                   <Button asChild size="lg" variant="outline" className="text-lg px-8 py-6">
-                    <Link href="/calculator?industry=clinics">
+                    <Link href="/pricing">
                       See Clinic Calculator
                     </Link>
                   </Button>

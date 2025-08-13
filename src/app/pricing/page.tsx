@@ -3,11 +3,13 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Slider } from "@/components/ui/slider"
+import { ElasticSlider } from "@/components/ui/elastic-slider"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Storefront, ShoppingBag, Heart, ShoppingCart, CheckCircle, Plus, Minus, Crown } from "@phosphor-icons/react"
 import { motion } from "framer-motion"
+import { ResultsReveal } from "@/components/animate-ui/results-reveal"
+import { AnimatedNumber } from "@/components/ui/animated-number"
 
 export default function PricingPage() {
   const [monthlySalesRevenue, setMonthlySalesRevenue] = useState([50000])
@@ -178,7 +180,7 @@ export default function PricingPage() {
                       </div>
                       
                       <div className="mb-2">
-                        <Slider
+                        <ElasticSlider
                           value={monthlySalesRevenue}
                           onValueChange={(value) => {
                             setMonthlySalesRevenue(value)
@@ -207,7 +209,7 @@ export default function PricingPage() {
                       </div>
                       
                       <div className="mb-2">
-                        <Slider
+                        <ElasticSlider
                           value={avgTransactionValue}
                           onValueChange={(value) => {
                             setAvgTransactionValue(value)
@@ -383,6 +385,7 @@ export default function PricingPage() {
                   /* Results Display */
                   <>
                     {/* Customer Journey */}
+                    <ResultsReveal trigger="immediate" delay={0.2} stagger={0.1}>
                     <div className="px-24 pt-12 pb-6">
                       <h3 className="text-sm font-semibold text-gray-800 mb-8 text-center">
                         Customer Journey with Loyalty Points
@@ -395,7 +398,11 @@ export default function PricingPage() {
                             <ShoppingBag size={28} className="text-gray-800" />
                           </div>
                           <div className="text-sm font-medium text-gray-800 h-10 flex items-center justify-center">
-                            <span className="tabular-nums">{monthlyTransactions.toLocaleString()}</span>&nbsp;Customers
+                            <AnimatedNumber 
+                              value={monthlyTransactions} 
+                              formatFunction={(val) => val.toLocaleString()}
+                              className="tabular-nums"
+                            />&nbsp;Customers
                           </div>
                         </div>
 
@@ -412,7 +419,11 @@ export default function PricingPage() {
                             <Heart size={28} className="text-gray-800" weight="fill" />
                           </div>
                           <div className="text-sm font-medium text-gray-800 h-10 flex items-center justify-center">
-                            <span className="tabular-nums">{returningCustomers.toLocaleString()}</span>&nbsp;Return
+                            <AnimatedNumber 
+                              value={returningCustomers} 
+                              formatFunction={(val) => val.toLocaleString()}
+                              className="tabular-nums"
+                            />&nbsp;Return
                           </div>
                         </div>
 
@@ -450,11 +461,13 @@ export default function PricingPage() {
                         </div>
                       </div>
                     </div>
+                    </ResultsReveal>
 
                     {/* Main revenue display with CTA - Absolute positioned to cover bottom */}
                     <div className="absolute bottom-0 left-0 right-0 top-96 rounded-b-lg overflow-hidden">
                       <div className="p-8 h-full flex flex-col justify-center" style={{ backgroundColor: '#0b04d9' }}>
                         
+                        <ResultsReveal trigger="immediate" delay={0.8}>
                         {/* Revenue breakdown */}
                         <div className="flex items-center justify-center gap-8 mb-10">
                           {/* Additional Revenue */}
@@ -463,7 +476,12 @@ export default function PricingPage() {
                               Additional monthly revenue
                             </div>
                             <div className="text-3xl font-bold text-white">
-                              {new Intl.NumberFormat('en-AE', { style: 'currency', currency: 'AED', minimumFractionDigits: 0 }).format(merchantNetGain)}
+                              <AnimatedNumber 
+                                value={merchantNetGain} 
+                                formatFunction={(val) => new Intl.NumberFormat('en-AE', { style: 'currency', currency: 'AED', minimumFractionDigits: 0 }).format(val)}
+                                duration={1.2}
+                                ease="power2.out"
+                              />
                             </div>
                           </div>
                           
@@ -498,6 +516,7 @@ export default function PricingPage() {
                             Get a Quote
                           </Button>
                         </div>
+                        </ResultsReveal>
                       </div>
                     </div>
                   </>
