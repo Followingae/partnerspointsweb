@@ -6,10 +6,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ElasticSlider } from "@/components/ui/elastic-slider"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Storefront, ShoppingBag, Heart, ShoppingCart, CheckCircle, Plus, Minus, Crown } from "@phosphor-icons/react"
+import { Storefront, ShoppingBag, Heart, ShoppingCart, CheckCircle, Plus, Minus, Crown, Gear, ArrowRight } from "@phosphor-icons/react"
 import { motion } from "framer-motion"
 import { ResultsReveal } from "@/components/animate-ui/results-reveal"
 import { AnimatedNumber } from "@/components/ui/animated-number"
+import Link from "next/link"
 
 export default function PricingPage() {
   const [monthlySalesRevenue, setMonthlySalesRevenue] = useState([50000])
@@ -88,10 +89,10 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-screen-2xl mx-auto px-4 pt-24 pb-4 h-[calc(100vh-7rem)]">
+      <div className="max-w-screen-2xl mx-auto px-4 pt-24 h-screen">
             
             {/* Single unified card */}
-            <Card className="h-[calc(100vh-7rem)] bg-transparent border-none shadow-none">
+            <Card className="h-[calc(100vh-6rem)] bg-transparent border-none shadow-none">
           <CardContent className="p-6 h-full">
             <div className="flex gap-8 h-full">
               
@@ -528,6 +529,373 @@ export default function PricingPage() {
         </Card>
 
       </div>
+
+      {/* What's Included Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-screen-xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              What&apos;s Included in Partners Points
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Everything you need to launch and manage your loyalty program, built directly into your RFM Payment Terminal
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* RFM Terminal Integration */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center"
+            >
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Gear size={32} className="text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">RFM Terminal Integration</h3>
+              <p className="text-gray-600 mb-4">Built directly into your payment terminal - no extra hardware or apps needed</p>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="text-sm font-medium text-gray-700">✓ No additional devices</div>
+                <div className="text-sm font-medium text-gray-700">✓ Instant setup</div>
+                <div className="text-sm font-medium text-gray-700">✓ Zero integration time</div>
+              </div>
+            </motion.div>
+
+            {/* Merchant Web Portal */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center"
+            >
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <ShoppingBag size={32} className="text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Merchant Web Portal</h3>
+              <p className="text-gray-600 mb-4">Complete control and analytics dashboard for managing your program</p>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="text-sm font-medium text-gray-700">✓ Real-time analytics</div>
+                <div className="text-sm font-medium text-gray-700">✓ Adjust point percentages</div>
+                <div className="text-sm font-medium text-gray-700">✓ Customer management</div>
+              </div>
+            </motion.div>
+
+            {/* Customer Mobile App */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center"
+            >
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Heart size={32} className="text-purple-600" weight="fill" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Customer Mobile App</h3>
+              <p className="text-gray-600 mb-4">Customers track points and find partner locations easily</p>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="text-sm font-medium text-gray-700">✓ Point balance tracking</div>
+                <div className="text-sm font-medium text-gray-700">✓ Transaction history</div>
+                <div className="text-sm font-medium text-gray-700">✓ Store locator</div>
+              </div>
+            </motion.div>
+
+            {/* Real-time Notifications */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center"
+            >
+              <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle size={32} className="text-yellow-600" weight="fill" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Smart Triggers</h3>
+              <p className="text-gray-600 mb-4">Get notified about VIP customers and redemption opportunities</p>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="text-sm font-medium text-gray-700">✓ High spender alerts</div>
+                <div className="text-sm font-medium text-gray-700">✓ Repeat customer detection</div>
+                <div className="text-sm font-medium text-gray-700">✓ Redemption prompts</div>
+              </div>
+            </motion.div>
+
+            {/* 24/7 Support */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center"
+            >
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Plus size={32} className="text-red-600" weight="bold" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Support & Onboarding</h3>
+              <p className="text-gray-600 mb-4">Complete setup assistance and ongoing support</p>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="text-sm font-medium text-gray-700">✓ Free onboarding</div>
+                <div className="text-sm font-medium text-gray-700">✓ Staff training</div>
+                <div className="text-sm font-medium text-gray-700">✓ 24/7 technical support</div>
+              </div>
+            </motion.div>
+
+            {/* Network Access */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 text-center"
+            >
+              <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Crown size={32} className="text-indigo-600" weight="fill" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">Network Access</h3>
+              <p className="text-gray-600 mb-4">Tap into RFM&apos;s proven payment network across the UAE</p>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="text-sm font-medium text-gray-700">✓ 15,000+ terminals</div>
+                <div className="text-sm font-medium text-gray-700">✓ AED 1.5B+ monthly volume</div>
+                <div className="text-sm font-medium text-gray-700">✓ Cross-merchant redemption</div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-600">
+              Everything you need to know about Partners Points pricing and setup
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            {/* FAQ 1 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="bg-gray-50 p-8 rounded-xl"
+            >
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                When do I pay the 2% fee?
+              </h3>
+              <p className="text-gray-600 mb-4">
+                You only pay the 2% fee when customers actually redeem their points for rewards. If customers earn points but never redeem them, you pay absolutely nothing. This means you&apos;re only paying for sales that happen because of the loyalty program.
+              </p>
+              <div className="bg-white p-4 rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-700">
+                  <strong>Example:</strong> Customer earns 100 points, never redeems → You pay AED 0<br/>
+                  <strong>Example:</strong> Customer redeems 100 points (worth AED 10) → You pay AED 0.20 (2% of AED 10)
+                </p>
+              </div>
+            </motion.div>
+
+            {/* FAQ 2 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-gray-50 p-8 rounded-xl"
+            >
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Are there any setup costs or monthly fees?
+              </h3>
+              <p className="text-gray-600 mb-4">
+                No upfront costs, no setup fees, no monthly subscription fees, and no hardware purchases. Partners Points is built into your existing RFM Payment Terminal, so there&apos;s nothing additional to buy or install.
+              </p>
+              <div className="bg-white p-4 rounded-lg border border-gray-200">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="text-green-600 font-medium">✓ Setup: AED 0</div>
+                  <div className="text-green-600 font-medium">✓ Monthly fees: AED 0</div>
+                  <div className="text-green-600 font-medium">✓ Hardware: AED 0</div>
+                  <div className="text-green-600 font-medium">✓ Integration: AED 0</div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* FAQ 3 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="bg-gray-50 p-8 rounded-xl"
+            >
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Can I change my points percentage anytime?
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Yes, you have complete control. You can adjust your points percentage (5%, 10%, 15%, etc.) anytime through your merchant portal. Changes take effect immediately across all your terminals.
+              </p>
+              <div className="bg-white p-4 rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-700">
+                  <strong>Popular settings:</strong> Restaurants typically use 15%, Retail stores use 10%, Medical clinics use 5%, and Supermarkets use 5%
+                </p>
+              </div>
+            </motion.div>
+
+            {/* FAQ 4 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="bg-gray-50 p-8 rounded-xl"
+            >
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                What happens to unredeemed points?
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Points expire according to rules you set (typically 12-24 months). When points expire, you pay nothing - they simply disappear from the customer&apos;s account. Industry data shows 15-20% of points typically expire unredeemed.
+              </p>
+              <div className="bg-white p-4 rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-700">
+                  This means your actual costs are even lower than the 2% fee rate, since some points will never be redeemed.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* FAQ 5 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="bg-gray-50 p-8 rounded-xl"
+            >
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                How long does setup take?
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Since Partners Points runs on your existing RFM Payment Terminal, setup is typically completed in under 2 hours. Our team handles the configuration remotely, and provides staff training to ensure smooth operation from day one.
+              </p>
+              <div className="bg-white p-4 rounded-lg border border-gray-200">
+                <div className="flex justify-between items-center text-sm">
+                  <span>Remote setup:</span>
+                  <span className="font-medium text-blue-600">30 minutes</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span>Staff training:</span>
+                  <span className="font-medium text-blue-600">45 minutes</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span>Testing & go-live:</span>
+                  <span className="font-medium text-blue-600">30 minutes</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* FAQ 6 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="bg-gray-50 p-8 rounded-xl"
+            >
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Can customers redeem points at other businesses?
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Yes! Customers can earn points at your business and redeem them at any other Partners Points merchant in the network. This increases the value proposition for customers and drives more foot traffic to your location from other merchants&apos; customers.
+              </p>
+              <div className="bg-white p-4 rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-700">
+                  The network effect means customers see more value in the program, leading to higher participation and loyalty.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Ready to Get Started Section */}
+      <section className="py-24 bg-gradient-to-br from-blue-900 to-blue-800 text-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Ready to Get Started?
+            </h2>
+            <p className="text-xl text-blue-100 mb-12 max-w-3xl mx-auto">
+              Launch your loyalty program today and start rewarding customers while protecting your margins
+            </p>
+
+            {/* Two-step process preview */}
+            <div className="grid md:grid-cols-2 gap-8 mb-12 max-w-3xl mx-auto">
+              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-xl font-bold">1</span>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Quick Setup</h3>
+                <p className="text-blue-100 text-sm">
+                  Remote configuration of your RFM terminal and staff training - completed in under 2 hours
+                </p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-xl font-bold">2</span>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">Start Rewarding</h3>
+                <p className="text-blue-100 text-sm">
+                  Begin awarding points to customers immediately and watch loyalty grow
+                </p>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="px-8 py-4 text-lg font-semibold bg-white text-blue-900 hover:bg-gray-100 transition-all duration-200"
+                asChild
+              >
+                <Link href="/onboarding">
+                  Start Free Setup
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="px-8 py-4 text-lg font-semibold border-white/30 text-white hover:bg-white/10 transition-all duration-200"
+                asChild
+              >
+                <Link href="/contact">
+                  Schedule a Demo
+                </Link>
+              </Button>
+            </div>
+
+            {/* Trust indicators */}
+            <div className="mt-12 pt-8 border-t border-white/20">
+              <div className="flex flex-wrap justify-center items-center gap-8 text-blue-100">
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={20} className="text-green-300" weight="fill" />
+                  <span className="text-sm">No upfront costs</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={20} className="text-green-300" weight="fill" />
+                  <span className="text-sm">2-hour setup</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={20} className="text-green-300" weight="fill" />
+                  <span className="text-sm">24/7 support</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={20} className="text-green-300" weight="fill" />
+                  <span className="text-sm">Pay only on redemption</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
     </div>
   )
 }
