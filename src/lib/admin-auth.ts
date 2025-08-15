@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { db } from './db'
-import { adminUsers, adminSessions } from './schema'
+import { adminUsers, adminSessions } from './schema-minimal'
 import { eq, and, gt } from 'drizzle-orm'
 import { NextRequest } from 'next/server'
 

@@ -1,16 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import { merchants } from '@/lib/schema'
 import { z } from 'zod'
+import { createClient } from '@supabase/supabase-js'
+import { sendEmail } from '@/lib/email'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: { persistSession: false }
+  }
+)
 
 const OnboardingSchema = z.object({
-  businessName: z.string().min(1, 'Business name is required'),
-  industry: z.enum(['restaurant', 'retail', 'healthcare', 'beauty', 'services', 'automotive', 'other']),
-  monthlySales: z.string().min(1, 'Monthly sales range is required'),
-  fullName: z.string().min(1, 'Full name is required'),
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  businessName: z.string().min(2, 'Business name must be at least 2 characters'),
+  industry: z.string().min(1, 'Industry is required'),
+  locationCount: z.number().min(1).max(50),
+  selectedEmirates: z.array(z.string()).min(1, 'Please select at least one emirate'),
+  monthlyCustomers: z.array(z.number()),
+  hasRfmTerminal: z.boolean(),
+  terminalDetails: z.string().optional(),
   email: z.string().email('Valid email is required'),
-  phone: z.string().min(1, 'Phone number is required'),
-  earnBackRate: z.string().transform(val => parseInt(val, 10)),
+  phone: z.string().min(9, 'Valid phone number is required'),
+  designation: z.string().min(2, 'Designation is required'),
+  acceptedTerms: z.boolean().refine(val => val === true, 'Must accept terms and conditions'),
 })
 
 export async function POST(request: NextRequest) {
@@ -20,46 +33,132 @@ export async function POST(request: NextRequest) {
     // Validate the request body
     const validatedData = OnboardingSchema.parse(body)
     
-    // Check if email already exists
-    const existingMerchant = await db.query.merchants.findFirst({
-      where: (merchants, { eq }) => eq(merchants.email, validatedData.email)
-    })
+    // Check if email already exists in submissions
+    const { data: existingSubmission } = await supabase
+      .from('contact_submissions')
+      .select('id')
+      .eq('email', validatedData.email)
+      .eq('form_type', 'onboarding')
+      .single()
     
-    if (existingMerchant) {
+    if (existingSubmission) {
       return NextResponse.json(
-        { error: 'A merchant with this email already exists' },
+        { error: 'We already have an onboarding request from this email address' },
         { status: 409 }
       )
     }
+
+    // Validate terminal details if RFM terminal is used
+    if (validatedData.hasRfmTerminal && (!validatedData.terminalDetails || validatedData.terminalDetails.length !== 9)) {
+      return NextResponse.json(
+        { error: 'Valid 9-digit Merchant ID is required when using RFM terminals' },
+        { status: 400 }
+      )
+    }
     
-    // Create new merchant record
-    const newMerchant = await db.insert(merchants).values({
-      businessName: validatedData.businessName,
-      industry: validatedData.industry,
-      monthlySales: validatedData.monthlySales,
-      contactName: validatedData.fullName,
-      email: validatedData.email,
-      phone: validatedData.phone,
-      earnBackRate: validatedData.earnBackRate,
-      status: 'pending', // Will be activated after RFM terminal configuration
-    }).returning()
-    
-    // In a real implementation, you would:
-    // 1. Send notification to RFM Loyalty team
-    // 2. Create terminal configuration request
-    // 3. Send welcome email to merchant
-    // 4. Set up merchant portal access
-    
+    // Insert into database
+    const { data: submission, error } = await supabase
+      .from('contact_submissions')
+      .insert({
+        name: validatedData.name,
+        email: validatedData.email,
+        company: validatedData.businessName,
+        phone: validatedData.phone,
+        message: `New business onboarding request from ${validatedData.designation} at ${validatedData.businessName} in the ${validatedData.industry} industry. Located across ${validatedData.selectedEmirates.join(', ')} with ${validatedData.locationCount} location(s).`,
+        form_type: 'onboarding',
+        form_data: {
+          businessName: validatedData.businessName,
+          industry: validatedData.industry,
+          designation: validatedData.designation,
+          locationCount: validatedData.locationCount,
+          selectedEmirates: validatedData.selectedEmirates,
+          monthlyCustomers: validatedData.monthlyCustomers,
+          hasRfmTerminal: validatedData.hasRfmTerminal,
+          terminalDetails: validatedData.terminalDetails || null,
+          acceptedTerms: validatedData.acceptedTerms,
+          submissionType: 'onboarding',
+          submittedAt: new Date().toISOString()
+        }
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Database error:', error)
+      throw new Error('Failed to save onboarding submission')
+    }
+
+    // Send email notifications
+    try {
+      // Send notification to admin
+      const adminSubject = `🚀 New Business Onboarding: ${submission.company} (${validatedData.industry})`
+      
+      let adminEmailBody = `New onboarding request received:
+
+Name: ${submission.name}
+Email: ${submission.email}
+Company: ${submission.company}
+Phone: ${submission.phone || 'Not provided'}
+Industry: ${validatedData.industry}
+Designation: ${validatedData.designation}
+Locations: ${validatedData.locationCount} across ${validatedData.selectedEmirates.join(', ')}
+RFM Terminal: ${validatedData.hasRfmTerminal ? 'Yes' : 'No'}
+${validatedData.terminalDetails ? `Terminal ID: ${validatedData.terminalDetails}` : ''}
+
+Message: ${submission.message}
+
+Submission ID: ${submission.id}
+Submitted: ${new Date().toLocaleString()}`
+
+      await sendEmail({
+        to: process.env.ADMIN_EMAIL || 'admin@partnerspoints.com',
+        subject: adminSubject,
+        text: adminEmailBody,
+        html: adminEmailBody.replace(/\n/g, '<br>')
+      })
+
+      // Send confirmation to customer  
+      const customerSubject = 'Thank you for your onboarding request - Partners Points'
+      const customerBody = `Dear ${submission.name},
+
+Thank you for your onboarding request! We've received your application for ${submission.company} and will review it shortly.
+
+Our team will be in touch within 1-2 business days to discuss your loyalty program setup.
+
+Next Steps:
+• Our team will review your application
+• We'll contact you to discuss your loyalty program setup
+• If needed, we'll provide and configure RFM terminals  
+• Your loyalty program will be live within 1-2 business days
+
+Best regards,
+Partners Points Team`
+
+      await sendEmail({
+        to: submission.email,
+        subject: customerSubject,
+        text: customerBody,
+        html: customerBody.replace(/\n/g, '<br>')
+      })
+
+      console.log(`Email notifications sent for submission ${submission.id}`)
+    } catch (emailError) {
+      console.error('Failed to send email notifications:', emailError)
+      // Don't fail the entire request if email fails
+    }
+
     return NextResponse.json({
       success: true,
-      merchant: {
-        id: newMerchant[0].id,
-        businessName: newMerchant[0].businessName,
-        email: newMerchant[0].email,
-        status: newMerchant[0].status,
-      },
-      message: 'Your RFM Payment Terminal is now being configured for loyalty. You\'ll be live within 1–2 business days.',
+      message: 'Thank you! We\'ve received your onboarding request and will be in touch within 1-2 business days to set up your loyalty program.',
+      submissionId: submission.id,
+      nextSteps: [
+        'Our team will review your application',
+        'We\'ll contact you to discuss your loyalty program setup',
+        'If needed, we\'ll provide and configure RFM terminals',
+        'Your loyalty program will be live within 1-2 business days'
+      ]
     })
+
   } catch (error) {
     console.error('Onboarding error:', error)
     
@@ -71,7 +170,7 @@ export async function POST(request: NextRequest) {
     }
     
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to submit onboarding request. Please try again.' },
       { status: 500 }
     )
   }

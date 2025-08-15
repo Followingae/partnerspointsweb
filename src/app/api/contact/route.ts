@@ -18,7 +18,7 @@ const ContactSchema = z.object({
   phone: z.string().optional(),
   message: z.string().min(10, 'Message must be at least 10 characters'),
   formType: z.enum(['contact', 'onboarding', 'calculator']).default('contact'),
-  metadata: z.record(z.any()).optional(),
+  formData: z.record(z.any()).optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -38,8 +38,7 @@ export async function POST(request: NextRequest) {
         phone: data.phone || null,
         message: data.message,
         form_type: data.formType,
-        status: 'new',
-        metadata: data.metadata || null,
+        form_data: data.formData || null,
       })
       .select()
       .single()
@@ -50,18 +49,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email notification
-    const { html, text } = generateContactFormEmail(data)
-    const emailResult = await sendEmail({
-      to: process.env.CONTACT_EMAIL || 'hello@partnerspoints.com',
-      subject: `New ${data.formType === 'onboarding' ? 'Onboarding' : 'Contact'} Form Submission - ${data.name}`,
-      html,
-      text,
-    })
+    try {
+      const { html, text } = generateContactFormEmail(data)
+      const emailResult = await sendEmail({
+        to: process.env.ADMIN_EMAIL || 'admin@partnerspoints.com',
+        subject: `New ${data.formType === 'onboarding' ? 'Onboarding' : 'Contact'} Form Submission - ${data.name}`,
+        html,
+        text,
+      })
 
-    if (!emailResult.success) {
-      console.error('Failed to send notification email:', emailResult.error)
-      // Continue anyway - form submission is saved
+      if (!emailResult.success) {
+        console.error('Failed to send notification email:', emailResult.error)
+      }
+    } catch (emailError) {
+      console.error('Email system error:', emailError)
     }
+
 
     return NextResponse.json({
       success: true,

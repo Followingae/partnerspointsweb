@@ -124,8 +124,9 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="submissions">Submissions</TabsTrigger>
             <TabsTrigger value="images">Images</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -216,6 +217,12 @@ export default function AdminDashboard() {
                     <Link href="/admin/content/manage">
                       <Edit className="w-4 h-4 mr-2" />
                       Edit Content Sections
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="w-full justify-start">
+                    <Link href="/admin/submissions">
+                      <FileText className="w-4 h-4 mr-2" />
+                      View Form Submissions
                     </Link>
                   </Button>
                   <Button asChild variant="outline" className="w-full justify-start">

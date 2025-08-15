@@ -21,14 +21,26 @@ export async function POST(request: NextRequest) {
     const userAgent = request.headers.get('user-agent') || 'unknown'
 
     // Check if we have a database connection
-    const hasDatabase = process.env.DATABASE_URL
+    const hasDatabase = !!process.env.DATABASE_URL
 
     let user
+    console.log('hasDatabase:', hasDatabase)
+    
     if (hasDatabase) {
       // Real authentication with database
-      user = await authenticateAdmin(username, password)
+      try {
+        console.log('Attempting database authentication...')
+        user = await authenticateAdmin(username, password)
+        console.log('Database authentication successful:', user ? 'user found' : 'user not found')
+      } catch (error) {
+        console.error('Database authentication failed, falling back to mock:', error?.message)
+        console.log('Using mock authentication fallback...')
+        user = await mockAdminAuth.authenticateAdmin(username, password)
+        console.log('Mock authentication result:', user ? 'success' : 'failed')
+      }
     } else {
       // Mock authentication for development
+      console.log('Using mock authentication - no DATABASE_URL set')
       user = await mockAdminAuth.authenticateAdmin(username, password)
     }
 

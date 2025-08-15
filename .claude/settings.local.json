@@ -29,7 +29,8 @@
       "mcp__ide__getDiagnostics",
       "Bash(pkill:*)",
       "Bash(find:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(nslookup:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"
