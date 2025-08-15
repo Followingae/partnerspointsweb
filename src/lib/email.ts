@@ -64,8 +64,8 @@ export interface EmailOptions {
 
 export async function sendEmail({ to, subject, html, text }: EmailOptions) {
   const recipients = to.split(',').map(email => email.trim())
-  const configs = [primaryConfig, fallbackConfig, alternateConfig]
-  const configNames = ['STARTTLS (587)', 'Direct SSL (465)', 'cPanel SSL (465)']
+  const configs = [fallbackConfig, primaryConfig, alternateConfig]
+  const configNames = ['Direct SSL (465)', 'STARTTLS (587)', 'cPanel SSL (465)']
   
   console.log('📧 Email delivery attempt started...')
   console.log('Recipients:', recipients)
