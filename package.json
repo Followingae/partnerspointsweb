@@ -7,6 +7,7 @@
     "build": "next build",
     "build:production": "next build && npm run copy-assets",
     "copy-assets": "cp -r public/* .next/static/ || xcopy public .next\\static /E /I /Y",
+    "package:deploy": "npm run build:production && tar -czf deploy-package.tar.gz .next public package.json",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
