@@ -30,7 +30,8 @@
       "Bash(pkill:*)",
       "Bash(find:*)",
       "Bash(cp:*)",
-      "Bash(nslookup:*)"
+      "Bash(nslookup:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

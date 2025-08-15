@@ -5,13 +5,13 @@ import { gsap } from 'gsap'
 import { Star, CheckCircle, Users, Award } from 'lucide-react'
 
 interface HeroDeviceInteractionsProps {
-  mobileRef: React.RefObject<HTMLDivElement>
-  terminalRef: React.RefObject<HTMLDivElement>
+  mobileRef: React.RefObject<HTMLDivElement | null>
+  terminalRef: React.RefObject<HTMLDivElement | null>
 }
 
 export function HeroDeviceInteractions({ mobileRef, terminalRef }: HeroDeviceInteractionsProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const linesRef = useRef<SVGLineElement[]>([])
+  const linesRef = useRef<SVGPathElement[]>([])
   const popupsRef = useRef<HTMLDivElement[]>([])
   const [isMobile, setIsMobile] = useState(false)
   const [isClient, setIsClient] = useState(false)

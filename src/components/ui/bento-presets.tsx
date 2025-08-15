@@ -3,7 +3,7 @@
 import * as React from "react";
 import { BentoGridItem } from "./bento-grid";
 import { ResultsLayout, FeaturesLayout, StatsLayout, BusinessTypesLayout } from "./bento-layouts";
-import { TrendingUp, Users, Clock, DollarSign, Store, ShoppingBag, FirstAid, ShoppingCart, Zap, Shield, Target, BarChart3 } from "lucide-react";
+import { TrendingUp, Users, Clock, DollarSign, Store, ShoppingBag, Heart, ShoppingCart, Zap, Shield, Target, BarChart3 } from "lucide-react";
 
 // Preset for Retail Results Section
 export const RetailResultsPreset = () => (
@@ -85,7 +85,7 @@ export const BusinessTypesPreset = () => (
     <BentoGridItem 
       title="Medical Clinics"
       description="Build patient loyalty with points for appointments and services"
-      icon={<FirstAid className="w-5 h-5 text-primary" />}
+      icon={<Heart className="w-5 h-5 text-primary" />}
     >
       <div className="mt-4">
         <div className="text-sm font-medium text-purple-600">Average Results:</div>

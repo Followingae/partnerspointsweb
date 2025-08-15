@@ -143,9 +143,14 @@ export default function OnboardingPage() {
       // Animate validation error
       const fieldElement = document.querySelector(`[data-field="${field}"]`)
       if (fieldElement) {
-        gsap.to(fieldElement, {
-          x: [-10, 10, -5, 5, 0],
-          duration: 0.5,
+        gsap.fromTo(fieldElement, { x: 0 }, {
+          keyframes: [
+            { x: -10, duration: 0.1 },
+            { x: 10, duration: 0.1 },
+            { x: -5, duration: 0.1 },
+            { x: 5, duration: 0.1 },
+            { x: 0, duration: 0.1 }
+          ],
           ease: "power2.out"
         })
         gsap.to(fieldElement, {
@@ -326,10 +331,12 @@ export default function OnboardingPage() {
         onComplete: () => {
           setCurrentStep(stepId)
           // Smooth fade in new step
-          gsap.fromTo(stepRef.current.children, 
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, ease: "power2.out", stagger: 0.1 }
-          )
+          if (stepRef.current) {
+            gsap.fromTo(stepRef.current.children, 
+              { y: 30, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.5, ease: "power2.out", stagger: 0.1 }
+            )
+          }
         }
       })
       
@@ -434,9 +441,14 @@ export default function OnboardingPage() {
       // Error animation
       const stepElement = document.querySelector('.step-content')
       if (stepElement) {
-        gsap.to(stepElement, {
-          x: [-10, 10, -5, 5, 0],
-          duration: 0.5,
+        gsap.fromTo(stepElement, { x: 0 }, {
+          keyframes: [
+            { x: -10, duration: 0.1 },
+            { x: 10, duration: 0.1 },
+            { x: -5, duration: 0.1 },
+            { x: 5, duration: 0.1 },
+            { x: 0, duration: 0.1 }
+          ],
           ease: "power2.out"
         })
       }

@@ -18,7 +18,7 @@ const ContactSchema = z.object({
   phone: z.string().optional(),
   message: z.string().min(10, 'Message must be at least 10 characters'),
   formType: z.enum(['contact', 'onboarding', 'calculator']).default('contact'),
-  formData: z.record(z.any()).optional(),
+  formData: z.record(z.string(), z.any()).optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid form data', details: error.errors },
+        { error: 'Invalid form data', details: error.issues },
         { status: 400 }
       )
     }

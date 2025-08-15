@@ -363,7 +363,7 @@ export default function RestaurantsPage() {
                               <ChartTooltipContent 
                                 formatter={(value, name) => [
                                   name === 'before' || name === 'after' ? 
-                                    (value > 10 ? `${value}` : `${value}x`) : value,
+                                    (Number(value) > 10 ? `${value}` : `${value}x`) : value,
                                   name === 'before' ? 'Before Points' : 'With Points'
                                 ]}
                               />

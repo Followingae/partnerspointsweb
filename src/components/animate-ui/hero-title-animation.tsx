@@ -41,12 +41,8 @@ export function HeroTitleAnimation({ className }: HeroTitleAnimationProps) {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: [0.25, 0.4, 0.25, 1],
-      },
-    },
+      y: 0
+    }
   }
 
   const characterVariants = {
@@ -56,12 +52,8 @@ export function HeroTitleAnimation({ className }: HeroTitleAnimationProps) {
     },
     visible: {
       opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.25, 0.4, 0.25, 1],
-      },
-    },
+      y: 0
+    }
   }
 
   return (
@@ -73,27 +65,39 @@ export function HeroTitleAnimation({ className }: HeroTitleAnimationProps) {
       animate={isInView ? "visible" : "hidden"}
     >
       {/* First line - Loyalty */}
-      <motion.div variants={titleVariants}>
+      <motion.div 
+        variants={titleVariants}
+        transition={{
+          duration: 0.8,
+          ease: "easeInOut"
+        }}
+      >
         <span className="font-semibold">Loyalty</span>
       </motion.div>
 
       {/* Second line - built-in to with character animation */}
-      <motion.div variants={titleVariants}>
+      <motion.div 
+        variants={titleVariants}
+        transition={{
+          duration: 0.8,
+          ease: "easeInOut"
+        }}
+      >
         {characters.map((char, index) => (
           <motion.span
             key={index}
             variants={characterVariants}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
+            transition={{
+              duration: 0.6,
+              ease: "easeInOut",
+              delay: index * 0.05
+            }}
             className="inline-block transition-all duration-700 ease-out"
             style={{
               fontWeight: shouldTransform ? 900 : 600,
               fontStyle: shouldTransform ? "italic" : "normal",
-            }}
-            transition={{
-              duration: 0.6,
-              ease: [0.25, 0.4, 0.25, 1],
-              delay: index * 0.05, // Stagger character appearance
             }}
           >
             {char === " " ? "\u00A0" : char}
@@ -102,7 +106,13 @@ export function HeroTitleAnimation({ className }: HeroTitleAnimationProps) {
       </motion.div>
 
       {/* Third line - payments */}
-      <motion.div variants={titleVariants}>
+      <motion.div 
+        variants={titleVariants}
+        transition={{
+          duration: 0.8,
+          ease: "easeInOut"
+        }}
+      >
         <span className="font-semibold">payments</span>
       </motion.div>
     </motion.div>

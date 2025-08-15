@@ -18,23 +18,20 @@ export const ResultsLayout = ({ className, children }: BentoLayoutProps) => (
       
       // First item is featured
       if (index === 0) {
-        return React.cloneElement(child, { 
+        return React.cloneElement(child as any, { 
           size: "featured",
-          variant: "highlight",
-          ...child.props 
+          variant: "highlight"
         });
       }
       // Second and third items are medium
       if (index === 1 || index === 2) {
-        return React.cloneElement(child, { 
-          size: "medium",
-          ...child.props 
+        return React.cloneElement(child as any, { 
+          size: "medium"
         });
       }
       // Rest are small
-      return React.cloneElement(child, { 
-        size: "small",
-        ...child.props 
+      return React.cloneElement(child as any, { 
+        size: "small"
       });
     })}
   </BentoGrid>
@@ -48,16 +45,14 @@ export const FeaturesLayout = ({ className, children }: BentoLayoutProps) => (
       
       // Every third item is large
       if (index % 3 === 0 && index > 0) {
-        return React.cloneElement(child, { 
+        return React.cloneElement(child as any, { 
           size: "large",
-          variant: "gradient",
-          ...child.props 
+          variant: "gradient"
         });
       }
       
-      return React.cloneElement(child, { 
-        size: "medium",
-        ...child.props 
+      return React.cloneElement(child as any, { 
+        size: "medium"
       });
     })}
   </BentoGrid>
@@ -69,10 +64,10 @@ export const StatsLayout = ({ className, children }: BentoLayoutProps) => (
     {React.Children.map(children, (child) => {
       if (!React.isValidElement(child)) return child;
       
-      return React.cloneElement(child, { 
+      return React.cloneElement(child as any, { 
         size: "small",
         variant: "subtle",
-        ...child.props 
+         
       });
     })}
   </BentoGrid>
@@ -86,16 +81,16 @@ export const HeroLayout = ({ className, children }: BentoLayoutProps) => (
       
       // First item takes up most space
       if (index === 0) {
-        return React.cloneElement(child, { 
+        return React.cloneElement(child as any, { 
           size: "featured",
           variant: "highlight",
-          ...child.props 
+           
         });
       }
       // Side items are tall and narrow
-      return React.cloneElement(child, { 
+      return React.cloneElement(child as any, { 
         size: "tall",
-        ...child.props 
+         
       });
     })}
   </BentoGrid>
@@ -111,10 +106,10 @@ export const MasonryLayout = ({ className, children }: BentoLayoutProps) => (
       const sizes = ["small", "medium", "large", "tall"] as const;
       const variants = ["default", "subtle", "gradient"] as const;
       
-      return React.cloneElement(child, { 
+      return React.cloneElement(child as any, { 
         size: sizes[index % sizes.length],
         variant: variants[index % variants.length],
-        ...child.props 
+         
       });
     })}
   </BentoGrid>
@@ -126,10 +121,10 @@ export const BusinessTypesLayout = ({ className, children }: BentoLayoutProps) =
     {React.Children.map(children, (child) => {
       if (!React.isValidElement(child)) return child;
       
-      return React.cloneElement(child, { 
+      return React.cloneElement(child as any, { 
         size: "large",
         variant: "default",
-        ...child.props 
+         
       });
     })}
   </BentoGrid>

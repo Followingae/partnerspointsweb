@@ -41,14 +41,7 @@ export function AnimatedStrikethrough({
 
   const lineVariants = {
     hidden: { scaleX: 0 },
-    visible: {
-      scaleX: 1,
-      transition: {
-        duration: 0.8,
-        delay: strikethroughDelay,
-        ease: [0.25, 0.4, 0.25, 1]
-      }
-    }
+    visible: { scaleX: 1 }
   }
 
   return (
@@ -66,10 +59,7 @@ export function AnimatedStrikethrough({
           variants={textVariants}
           transition={{
             duration: 0.8,
-            ease: [0.25, 0.4, 0.25, 1],
-            type: "spring",
-            damping: 12,
-            stiffness: 100,
+            ease: "easeInOut"
           }}
         >
           {word}
@@ -83,6 +73,11 @@ export function AnimatedStrikethrough({
         variants={lineVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
+        transition={{
+          duration: 0.8,
+          delay: strikethroughDelay,
+          ease: "easeInOut"
+        }}
       />
     </motion.div>
   )
