@@ -129,15 +129,24 @@ export async function POST(request: NextRequest) {
       // Send admin notification using the exact same system as test emails
       const adminSubject = `🚀 New Business Onboarding: ${submission.company} (${validatedData.industry})`
       
-      console.log(`📧 Sending admin notification to: ${process.env.ADMIN_EMAIL}`)
-      const adminResult = await sendEmail({
-        to: process.env.ADMIN_EMAIL || 'admin@partnerspoints.com',
-        subject: adminSubject,
-        html: adminHtml,
-        text: adminText
-      })
+      // Send admin notification to each admin separately (like test emails)
+      const adminEmails = (process.env.ADMIN_EMAIL || 'admin@partnerspoints.com').split(',').map(email => email.trim())
+      console.log(`📧 Sending admin notifications to: ${adminEmails.join(', ')}`)
       
-      console.log('📧 Admin email result:', adminResult)
+      const adminResults = []
+      for (const adminEmail of adminEmails) {
+        console.log(`📧 Sending to: ${adminEmail}`)
+        const result = await sendEmail({
+          to: adminEmail,
+          subject: adminSubject,
+          html: adminHtml,
+          text: adminText
+        })
+        console.log(`📧 Result for ${adminEmail}:`, result)
+        adminResults.push({ email: adminEmail, result })
+      }
+      
+      console.log('📧 All admin email results:', adminResults)
 
       // Generate customer confirmation email with beautiful template
       const { html: customerHtml, text: customerText } = generateCustomerConfirmationEmail({
@@ -155,11 +164,18 @@ export async function POST(request: NextRequest) {
       
       console.log('📧 Customer email result:', customerResult)
 
-      if (adminResult.success && customerResult.success) {
+      const adminSuccessCount = adminResults.filter(r => r.result.success).length
+      const allAdminSuccess = adminSuccessCount === adminEmails.length
+      
+      if (allAdminSuccess && customerResult.success) {
         console.log(`✅ All email notifications sent successfully for submission ${submission.id}`)
+        console.log(`📧 Admin emails: ${adminSuccessCount}/${adminEmails.length} successful`)
       } else {
         console.warn(`⚠️ Some email notifications failed for submission ${submission.id}:`)
-        console.warn('Admin email:', adminResult.success ? 'Success' : adminResult.error)
+        console.warn(`Admin emails: ${adminSuccessCount}/${adminEmails.length} successful`)
+        adminResults.forEach(({ email, result }) => {
+          console.warn(`  - ${email}: ${result.success ? 'Success' : result.error}`)
+        })
         console.warn('Customer email:', customerResult.success ? 'Success' : customerResult.error)
       }
     } catch (emailError) {
