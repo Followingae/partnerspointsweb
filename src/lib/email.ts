@@ -22,9 +22,27 @@ const primaryConfig = {
   logger: true
 }
 
-// Fallback configuration - Direct server SSL
+// Fallback configuration - mail.domain.com STARTTLS
 const fallbackConfig = {
-  host: 'd3395.lon1.stableserver.net',
+  host: 'mail.partnerspoints.ae',
+  port: 587,
+  secure: false,
+  requireTLS: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
+    servername: 'mail.partnerspoints.ae'
+  },
+  debug: true,
+  logger: true
+}
+
+// Third fallback - mail.domain.com SSL
+const alternateConfig = {
+  host: 'mail.partnerspoints.ae',
   port: 465,
   secure: true,
   auth: {
@@ -33,23 +51,7 @@ const fallbackConfig = {
   },
   tls: {
     rejectUnauthorized: false,
-    servername: 'd3395.lon1.stableserver.net'
-  },
-  debug: true,
-  logger: true
-}
-
-// Third fallback - Alternate cPanel configuration
-const alternateConfig = {
-  host: process.env.SMTP_HOST,
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false
+    servername: 'mail.partnerspoints.ae'
   },
   debug: true,
   logger: true
