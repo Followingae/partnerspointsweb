@@ -4,20 +4,25 @@ import nodemailer from 'nodemailer'
 // Create multiple transporter configurations for robust email delivery
 const createTransporter = (config: any) => nodemailer.createTransport(config)
 
-// Primary configuration - Non-SSL as per cPanel
+// Primary configuration - STARTTLS with authentication
 const primaryConfig = {
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: false, // No SSL for port 587
+  secure: false, // false for STARTTLS; true for SSL
+  requireTLS: true, // Force TLS
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
+  },
+  tls: {
+    ciphers: 'SSLv3',
+    rejectUnauthorized: false
   },
   debug: true,
   logger: true
 }
 
-// Fallback configuration - SSL
+// Fallback configuration - Direct server SSL
 const fallbackConfig = {
   host: 'd3395.lon1.stableserver.net',
   port: 465,
@@ -27,18 +32,18 @@ const fallbackConfig = {
     pass: process.env.SMTP_PASS,
   },
   tls: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    servername: 'd3395.lon1.stableserver.net'
   },
   debug: true,
   logger: true
 }
 
-// Third fallback - STARTTLS
-const starttlsConfig = {
-  host: 'd3395.lon1.stableserver.net',
-  port: 587,
-  secure: false,
-  requireTLS: true,
+// Third fallback - Alternate cPanel configuration
+const alternateConfig = {
+  host: process.env.SMTP_HOST,
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -59,8 +64,17 @@ export interface EmailOptions {
 
 export async function sendEmail({ to, subject, html, text }: EmailOptions) {
   const recipients = to.split(',').map(email => email.trim())
-  const configs = [primaryConfig, fallbackConfig, starttlsConfig]
-  const configNames = ['Non-SSL (cPanel)', 'SSL (465)', 'STARTTLS (587)']
+  const configs = [primaryConfig, fallbackConfig, alternateConfig]
+  const configNames = ['STARTTLS (587)', 'Direct SSL (465)', 'cPanel SSL (465)']
+  
+  console.log('📧 Email delivery attempt started...')
+  console.log('Recipients:', recipients)
+  console.log('Subject:', subject)
+  console.log('Environment check:')
+  console.log('- SMTP_HOST:', process.env.SMTP_HOST)
+  console.log('- SMTP_PORT:', process.env.SMTP_PORT)
+  console.log('- SMTP_USER:', process.env.SMTP_USER)
+  console.log('- EMAIL_FROM:', process.env.EMAIL_FROM)
   
   for (let i = 0; i < configs.length; i++) {
     const config = configs[i]
@@ -68,11 +82,22 @@ export async function sendEmail({ to, subject, html, text }: EmailOptions) {
     
     try {
       console.log(`🔄 Attempting email delivery with ${configName}...`)
+      console.log('Config:', { ...config, auth: { ...config.auth, pass: '[HIDDEN]' } })
       
       const transporter = createTransporter(config)
       
-      const info = await transporter.sendMail({
-        from: process.env.EMAIL_FROM || '"Partners Points" <admin@partnerspoints.ae>',
+      // Test the connection first
+      try {
+        await transporter.verify()
+        console.log(`✅ SMTP connection verified for ${configName}`)
+      } catch (verifyError) {
+        console.warn(`⚠️ SMTP verification failed for ${configName}:`, verifyError instanceof Error ? verifyError.message : verifyError)
+        // Continue anyway as verify() can be unreliable
+      }
+      
+      const mailOptions = {
+        from: `"Partners Points" <${process.env.SMTP_USER}>`, // Use authenticated SMTP user as sender
+        replyTo: process.env.EMAIL_FROM || `"Partners Points" <${process.env.SMTP_USER}>`,
         to: recipients,
         subject,
         text,
@@ -82,29 +107,51 @@ export async function sendEmail({ to, subject, html, text }: EmailOptions) {
           'X-Priority': '1',
           'Importance': 'high'
         }
+      }
+      
+      console.log('📮 Sending email with options:', { 
+        ...mailOptions, 
+        html: '[HTML CONTENT]',
+        text: text?.substring(0, 100) + '...' 
       })
+      
+      const info = await transporter.sendMail(mailOptions)
 
       console.log(`✅ Email sent successfully with ${configName}!`)
       console.log('Message ID:', info.messageId)
       console.log('Recipients:', recipients.join(', '))
       console.log('Response:', info.response)
+      console.log('Accepted:', info.accepted)
+      console.log('Rejected:', info.rejected)
+      console.log('Pending:', info.pending)
+      
+      // Close the transporter
+      transporter.close()
       
       return { 
         success: true, 
         messageId: info.messageId, 
         recipients,
-        method: configName 
+        method: configName,
+        response: info.response,
+        accepted: info.accepted,
+        rejected: info.rejected
       }
       
     } catch (error) {
-      console.error(`❌ ${configName} failed:`, error instanceof Error ? error.message : error)
+      console.error(`❌ ${configName} failed:`)
+      console.error('Error type:', typeof error)
+      console.error('Error name:', error instanceof Error ? error.name : 'Unknown')
+      console.error('Error message:', error instanceof Error ? error.message : error)
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
       
       // If this is the last config, return error
       if (i === configs.length - 1) {
         console.error('🚨 All email configurations failed!')
         return { 
           success: false, 
-          error: `All email methods failed. Last error: ${error instanceof Error ? error.message : 'Unknown error'}` 
+          error: `All email methods failed. Last error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          lastError: error 
         }
       }
       

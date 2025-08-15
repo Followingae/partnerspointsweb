@@ -55,6 +55,8 @@ export default function OnboardingPage() {
   })
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
   const [isValidating, setIsValidating] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submissionResponse, setSubmissionResponse] = useState<{message: string, nextSteps: string[]} | null>(null)
   
   const containerRef = useRef<HTMLDivElement>(null)
   const stepRef = useRef<HTMLDivElement>(null)
@@ -123,8 +125,8 @@ export default function OnboardingPage() {
         }
         break
       case "phone":
-        if (!value || value.length < 9) {
-          error = "Please enter a valid phone number"
+        if (!value || value.length !== 10) {
+          error = "Please enter a valid 10-digit phone number (e.g., 9711234123)"
         }
         break
       case "designation":
@@ -402,38 +404,33 @@ export default function OnboardingPage() {
         throw new Error(result.error || 'Submission failed')
       }
 
-      // Success animation
-      const stepElement = document.querySelector('.step-content')
+      // Set submission success state
+      setSubmissionResponse(result)
+      setIsSubmitted(true)
+
+      // Success animation - fade out current content and show success
+      const stepElement = stepRef.current
       if (stepElement) {
-        gsap.to(stepElement, {
-          scale: 1.05,
-          duration: 0.3,
+        gsap.to(stepElement.children, {
+          y: -30,
+          opacity: 0,
+          duration: 0.4,
           ease: "power2.out",
-          yoyo: true,
-          repeat: 1
+          stagger: 0.1,
+          onComplete: () => {
+            // Let React handle rendering the success state
+            setTimeout(() => {
+              const successElement = document.querySelector('.success-content')
+              if (successElement) {
+                gsap.fromTo(successElement.children,
+                  { y: 30, opacity: 0 },
+                  { y: 0, opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.15 }
+                )
+              }
+            }, 100)
+          }
         })
       }
-
-      // Show success message with next steps
-      alert(`${result.message}\n\nNext Steps:\n${result.nextSteps.map((step: string, i: number) => `${i + 1}. ${step}`).join('\n')}`)
-      
-      // Reset form
-      setFormData({
-        name: "",
-        businessName: "",
-        industry: "",
-        locationCount: 1,
-        selectedEmirates: [],
-        monthlyCustomers: [1000],
-        hasRfmTerminal: false,
-        terminalDetails: "",
-        email: "",
-        phone: "",
-        designation: "",
-        acceptedTerms: false
-      })
-      setCurrentStep(1)
-      setValidationErrors({})
 
     } catch (error) {
       console.error('Submission error:', error)
@@ -456,6 +453,52 @@ export default function OnboardingPage() {
       alert(error instanceof Error ? error.message : 'Failed to submit. Please try again.')
     } finally {
       setIsValidating(false)
+    }
+  }
+
+  const startNewSubmission = () => {
+    // Animate out success content
+    const successElement = document.querySelector('.success-content')
+    if (successElement) {
+      gsap.to(successElement.children, {
+        y: -30,
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.out",
+        stagger: 0.1,
+        onComplete: () => {
+          // Reset state
+          setFormData({
+            name: "",
+            businessName: "",
+            industry: "",
+            locationCount: 1,
+            selectedEmirates: [],
+            monthlyCustomers: [1000],
+            hasRfmTerminal: false,
+            terminalDetails: "",
+            email: "",
+            phone: "",
+            designation: "",
+            acceptedTerms: false
+          })
+          setCurrentStep(1)
+          setValidationErrors({})
+          setIsSubmitted(false)
+          setSubmissionResponse(null)
+          
+          // Animate in step 1
+          setTimeout(() => {
+            const stepElement = stepRef.current
+            if (stepElement) {
+              gsap.fromTo(stepElement.children,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.5, ease: "power2.out", stagger: 0.1 }
+              )
+            }
+          }, 100)
+        }
+      })
     }
   }
 
@@ -505,12 +548,62 @@ export default function OnboardingPage() {
         </div>
       </div>
 
-      {/* Bottom section - Multi-step Form */}
+      {/* Bottom section - Multi-step Form or Success */}
       <div className="pb-16 px-8">
         <div className="max-w-4xl mx-auto" ref={stepRef}>
           
+          {/* Success State */}
+          {isSubmitted && submissionResponse && (
+            <div className="success-content space-y-12 text-center">
+              <div className="space-y-6">
+                {/* Success checkmark */}
+                <div className="flex justify-center">
+                  <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center">
+                    <Check className="w-10 h-10 text-white" />
+                  </div>
+                </div>
+                
+                {/* Thank you message */}
+                <div className="space-y-4">
+                  <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
+                    Thank you!
+                  </h2>
+                  <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                    {submissionResponse.message}
+                  </p>
+                </div>
+                
+                {/* Next steps */}
+                <div className="max-w-2xl mx-auto">
+                  <h3 className="text-2xl font-semibold text-gray-800 mb-6">What happens next?</h3>
+                  <div className="space-y-4">
+                    {submissionResponse.nextSteps.map((step, index) => (
+                      <div key={index} className="flex items-start gap-4 text-left">
+                        <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-1">
+                          {index + 1}
+                        </div>
+                        <p className="text-lg text-gray-700 leading-relaxed">{step}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Start new submission button */}
+                <div className="pt-8">
+                  <Button
+                    onClick={startNewSubmission}
+                    variant="outline"
+                    className="px-8 py-3 text-gray-600 border-gray-300 hover:bg-gray-50"
+                  >
+                    Submit Another Enquiry
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          
           {/* Step 1: Personal Introduction */}
-          {currentStep === 1 && (
+          {!isSubmitted && currentStep === 1 && (
             <div className="space-y-12">
               {/* First line - single sentence */}
               <div className="text-center">
@@ -643,7 +736,7 @@ export default function OnboardingPage() {
           )}
 
           {/* Step 2: Business Scale */}
-          {currentStep === 2 && (
+          {!isSubmitted && currentStep === 2 && (
             <div className="space-y-16">
               {/* Location count with +/- buttons */}
               <div className="text-center">
@@ -736,7 +829,7 @@ export default function OnboardingPage() {
           )}
 
           {/* Step 3: Current Setup */}
-          {currentStep === 3 && (
+          {!isSubmitted && currentStep === 3 && (
             <div className="space-y-12">
               {/* Single line conversational question */}
               <div className="text-center">
@@ -861,7 +954,7 @@ export default function OnboardingPage() {
           )}
 
           {/* Step 4: Contact */}
-          {currentStep === 4 && (
+          {!isSubmitted && currentStep === 4 && (
             <div className="space-y-16">
               {/* Email line */}
               <div className="text-center">
@@ -921,7 +1014,7 @@ export default function OnboardingPage() {
                       value={formData.phone}
                       data-field="phone"
                       onChange={(e) => {
-                        // Format phone number (UAE format)
+                        // Format phone number (UAE format) - allowing exactly 10 digits for 9711234123 format
                         const value = e.target.value.replace(/\D/g, '').slice(0, 10)
                         updateFormData("phone", value)
                         // Buttery smooth typing feedback
@@ -952,7 +1045,7 @@ export default function OnboardingPage() {
                           ease: "elastic.out(1, 0.6)" 
                         })
                       }}
-                      placeholder="+971 50 123 4567"
+                      placeholder="9711234123"
                       className="input-animated inline-block w-auto min-w-[280px] max-w-[350px] border-0 border-b border-gray-400 rounded-none bg-transparent text-3xl lg:text-4xl px-2 py-1 h-auto focus:outline-none focus:ring-0 placeholder:text-gray-400 font-normal text-left"
                       style={{ lineHeight: 'inherit' }}
                     />
@@ -1042,6 +1135,7 @@ export default function OnboardingPage() {
           )}
 
           {/* Navigation - Fixed positioning */}
+          {!isSubmitted && (
           <div className="flex justify-between items-center pt-16">
             {/* Left side - Back button container (fixed width) */}
             <div className="w-20 flex justify-start">
@@ -1079,6 +1173,7 @@ export default function OnboardingPage() {
               )}
             </div>
           </div>
+          )}
           
         </div>
       </div>

@@ -90,6 +90,8 @@ export async function POST(request: NextRequest) {
 
     // Send email notifications
     try {
+      console.log(`📧 Starting email notifications for submission ${submission.id}`)
+      
       // Send notification to admin
       const adminSubject = `🚀 New Business Onboarding: ${submission.company} (${validatedData.industry})`
       
@@ -110,12 +112,15 @@ Message: ${submission.message}
 Submission ID: ${submission.id}
 Submitted: ${new Date().toLocaleString()}`
 
-      await sendEmail({
+      console.log(`📧 Sending admin notification to: ${process.env.ADMIN_EMAIL}`)
+      const adminResult = await sendEmail({
         to: process.env.ADMIN_EMAIL || 'admin@partnerspoints.com',
         subject: adminSubject,
         text: adminEmailBody,
         html: adminEmailBody.replace(/\n/g, '<br>')
       })
+      
+      console.log('📧 Admin email result:', adminResult)
 
       // Send confirmation to customer  
       const customerSubject = 'Thank you for your onboarding request - Partners Points'
@@ -134,16 +139,30 @@ Next Steps:
 Best regards,
 Partners Points Team`
 
-      await sendEmail({
+      console.log(`📧 Sending customer confirmation to: ${submission.email}`)
+      const customerResult = await sendEmail({
         to: submission.email,
         subject: customerSubject,
         text: customerBody,
         html: customerBody.replace(/\n/g, '<br>')
       })
+      
+      console.log('📧 Customer email result:', customerResult)
 
-      console.log(`Email notifications sent for submission ${submission.id}`)
+      if (adminResult.success && customerResult.success) {
+        console.log(`✅ All email notifications sent successfully for submission ${submission.id}`)
+      } else {
+        console.warn(`⚠️ Some email notifications failed for submission ${submission.id}:`)
+        console.warn('Admin email:', adminResult.success ? 'Success' : adminResult.error)
+        console.warn('Customer email:', customerResult.success ? 'Success' : customerResult.error)
+      }
     } catch (emailError) {
-      console.error('Failed to send email notifications:', emailError)
+      console.error('❌ Failed to send email notifications:', emailError)
+      console.error('Email error details:', {
+        name: emailError instanceof Error ? emailError.name : 'Unknown',
+        message: emailError instanceof Error ? emailError.message : emailError,
+        stack: emailError instanceof Error ? emailError.stack : 'No stack trace'
+      })
       // Don't fail the entire request if email fails
     }
 

@@ -5,6 +5,7 @@ import InView from "@/components/modern/InView";
 import { Card } from "@/components/modern/Card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, ShoppingCart, TrendingUp, Zap, Gift, BarChart3, Star, Quote, Apple, CheckCircle, Clock, Users, Target, Settings, HelpCircle } from "lucide-react";
 import { FadeIn } from "@/components/animate-ui/fade-in";
 import { AnimatedText } from "@/components/animate-ui/animated-text";
@@ -497,8 +498,14 @@ export default function SupermarketsPage() {
               <p className="text-sm text-muted-foreground mb-2">
                 Exclusive to RFM Payment Terminals—on RFM Loyalty's high-volume retail infrastructure.
               </p>
-              <div className="w-24 h-8 bg-muted rounded flex items-center justify-center mx-auto">
-                <span className="text-xs text-muted-foreground">RFM Logo</span>
+              <div className="flex items-center justify-center mx-auto">
+                <Image 
+                  src="/rfm-loyalty-logo.jpg" 
+                  alt="RFM Loyalty Logo" 
+                  width={120} 
+                  height={32} 
+                  className="h-8 w-auto"
+                />
               </div>
             </div>
           </FadeIn>

@@ -6,6 +6,7 @@ import { Card } from "@/components/modern/Card";
 import Container from "@/components/modern/Container";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { Shield, TrendingUp, Gift, Zap, Users, Calculator, Star, Quote, ArrowRight, CheckCircle, Clock, Target, DollarSign, BarChart3, Lightbulb, FileText, BookOpen, Settings, HelpCircle } from "lucide-react";
 import { FadeIn } from "@/components/animate-ui/fade-in";
 import StandardSection from "@/components/modern/StandardSection";
@@ -437,8 +438,14 @@ export default function RetailPage() {
               <p className="text-sm text-muted-foreground mb-2">
                 Partners Points for Retail is exclusive to RFM Payment Terminals and powered by RFM Loyalty's nationwide merchant network.
               </p>
-              <div className="w-24 h-8 bg-muted rounded flex items-center justify-center mx-auto">
-                <span className="text-xs text-muted-foreground">RFM Logo</span>
+              <div className="flex items-center justify-center mx-auto">
+                <Image 
+                  src="/rfm-loyalty-logo.jpg" 
+                  alt="RFM Loyalty Logo" 
+                  width={120} 
+                  height={32} 
+                  className="h-8 w-auto"
+                />
               </div>
             </div>
           </FadeIn>
