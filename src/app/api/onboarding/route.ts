@@ -123,8 +123,17 @@ export async function POST(request: NextRequest) {
         }
       }
       
-      // Generate the beautiful branded email template (same as test emails)
-      const { html: adminHtml, text: adminText } = generateOnboardingEmail(emailData)
+      // TEMPORARY: Use simple email template for testing (like working test emails)
+      const adminHtml = `<div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2>🚀 New Business Onboarding Request</h2>
+        <p><strong>Name:</strong> ${emailData.name}</p>
+        <p><strong>Business:</strong> ${emailData.company}</p>
+        <p><strong>Email:</strong> ${emailData.email}</p>
+        <p><strong>Phone:</strong> ${emailData.phone}</p>
+        <p><strong>Industry:</strong> ${emailData.metadata?.industry}</p>
+        <p><strong>Message:</strong> ${emailData.message}</p>
+      </div>`
+      const adminText = `New Business Onboarding: ${emailData.name} from ${emailData.company}`
       
       // Send admin notification using the exact same system as test emails
       const adminSubject = `🚀 New Business Onboarding: ${submission.company} (${validatedData.industry})`
