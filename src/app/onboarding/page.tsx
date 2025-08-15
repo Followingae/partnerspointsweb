@@ -125,8 +125,10 @@ export default function OnboardingPage() {
         }
         break
       case "phone":
-        if (!value || value.length !== 10) {
-          error = "Please enter a valid 10-digit phone number (e.g., 9711234123)"
+        if (!value || value.length !== 13) {
+          error = "Please enter a valid UAE phone number (e.g., +971501234123)"
+        } else if (!value.startsWith('+971')) {
+          error = "UAE phone numbers must start with +971"
         }
         break
       case "designation":
@@ -1014,8 +1016,32 @@ export default function OnboardingPage() {
                       value={formData.phone}
                       data-field="phone"
                       onChange={(e) => {
-                        // Format phone number (UAE format) - allowing exactly 10 digits for 9711234123 format
-                        const value = e.target.value.replace(/\D/g, '').slice(0, 10)
+                        // Format phone number (UAE format) - +971501234123
+                        let value = e.target.value
+                        
+                        // If user starts typing numbers, auto-prepend +971
+                        if (value.match(/^[0-9]/) && !value.startsWith('+971')) {
+                          value = '+971' + value
+                        }
+                        
+                        // Only allow +971 followed by 9 digits
+                        if (value.startsWith('+971')) {
+                          const digits = value.slice(4).replace(/\D/g, '').slice(0, 9)
+                          value = '+971' + digits
+                        } else if (value.startsWith('+')) {
+                          // If they start with + but not +971, correct it
+                          const allDigits = value.replace(/\D/g, '')
+                          if (allDigits.startsWith('971')) {
+                            const remainingDigits = allDigits.slice(3).slice(0, 9)
+                            value = '+971' + remainingDigits
+                          } else {
+                            value = '+971'
+                          }
+                        } else {
+                          // If no +, just allow clearing
+                          value = value === '' ? '' : '+971'
+                        }
+                        
                         updateFormData("phone", value)
                         // Buttery smooth typing feedback
                         gsap.to(e.target, {
@@ -1045,7 +1071,7 @@ export default function OnboardingPage() {
                           ease: "elastic.out(1, 0.6)" 
                         })
                       }}
-                      placeholder="9711234123"
+                      placeholder="+971501234123"
                       className="input-animated inline-block w-auto min-w-[280px] max-w-[350px] border-0 border-b border-gray-400 rounded-none bg-transparent text-3xl lg:text-4xl px-2 py-1 h-auto focus:outline-none focus:ring-0 placeholder:text-gray-400 font-normal text-left"
                       style={{ lineHeight: 'inherit' }}
                     />
