@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     telephone: false,
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://partnerspoints.com"),
+  icons: {
+    icon: '/partnerspointsfavicon.png',
+    shortcut: '/partnerspointsfavicon.png',
+    apple: '/partnerspointsfavicon.png',
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
