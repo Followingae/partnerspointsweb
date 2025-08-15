@@ -16,6 +16,14 @@ export async function POST(request: NextRequest) {
     console.log('- Subject:', testSubject)
     console.log('- Message:', testMessage)
     
+    console.log('🔧 Environment Variables Check:')
+    console.log('- SMTP_HOST:', process.env.SMTP_HOST)
+    console.log('- SMTP_PORT:', process.env.SMTP_PORT)
+    console.log('- SMTP_USER:', process.env.SMTP_USER)
+    console.log('- SMTP_PASS:', process.env.SMTP_PASS ? `[${process.env.SMTP_PASS.length} chars]` : 'NOT SET')
+    console.log('- EMAIL_FROM:', process.env.EMAIL_FROM)
+    console.log('- ADMIN_EMAIL:', process.env.ADMIN_EMAIL)
+    
     const result = await sendEmail({
       to: testRecipient,
       subject: testSubject,
@@ -53,15 +61,29 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
+  console.log('🔍 Environment Variables Debug:')
+  console.log('- SMTP_HOST:', process.env.SMTP_HOST)
+  console.log('- SMTP_PORT:', process.env.SMTP_PORT)
+  console.log('- SMTP_USER:', process.env.SMTP_USER)
+  console.log('- SMTP_PASS:', process.env.SMTP_PASS ? `[SET - ${process.env.SMTP_PASS.length} chars]` : 'NOT SET')
+  console.log('- EMAIL_FROM:', process.env.EMAIL_FROM)
+  console.log('- ADMIN_EMAIL:', process.env.ADMIN_EMAIL)
+  
   return NextResponse.json({
-    message: 'Email Test Endpoint',
+    message: 'Email Test Endpoint - Environment Check',
     usage: 'POST with { "to": "email@example.com", "subject": "Test", "message": "Hello" }',
     environment: {
       smtpHost: process.env.SMTP_HOST,
       smtpPort: process.env.SMTP_PORT,
       smtpUser: process.env.SMTP_USER,
+      smtpPass: process.env.SMTP_PASS ? `[SET - ${process.env.SMTP_PASS.length} chars]` : 'NOT SET',
       emailFrom: process.env.EMAIL_FROM,
       adminEmail: process.env.ADMIN_EMAIL
+    },
+    connectivityTest: {
+      smtpHost: process.env.SMTP_HOST,
+      port465: 'Should be tested manually with: powershell "Test-NetConnection -ComputerName ' + process.env.SMTP_HOST + ' -Port 465"',
+      port587: 'Should be tested manually with: powershell "Test-NetConnection -ComputerName ' + process.env.SMTP_HOST + ' -Port 587"'
     }
   })
 }

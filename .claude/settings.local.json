@@ -31,7 +31,8 @@
       "Bash(find:*)",
       "Bash(cp:*)",
       "Bash(nslookup:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

@@ -4,29 +4,11 @@ import nodemailer from 'nodemailer'
 // Create multiple transporter configurations for robust email delivery
 const createTransporter = (config: any) => nodemailer.createTransport(config)
 
-// Primary configuration - STARTTLS with authentication
+// Primary configuration - Use environment port (465 SSL)
 const primaryConfig = {
   host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: false, // false for STARTTLS; true for SSL
-  requireTLS: true, // Force TLS
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  tls: {
-    ciphers: 'SSLv3',
-    rejectUnauthorized: false
-  },
-  debug: true,
-  logger: true
-}
-
-// Fallback configuration - Direct hosting provider server SSL
-const fallbackConfig = {
-  host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT || '465'),
-  secure: true,
+  secure: true, // true for SSL on port 465
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -35,6 +17,30 @@ const fallbackConfig = {
     rejectUnauthorized: false,
     servername: process.env.SMTP_HOST
   },
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 5000,    // 5 seconds
+  socketTimeout: 15000,     // 15 seconds
+  debug: true,
+  logger: true
+}
+
+// Fallback configuration - Try STARTTLS on port 587
+const fallbackConfig = {
+  host: process.env.SMTP_HOST,
+  port: 587,
+  secure: false,
+  requireTLS: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
+    servername: process.env.SMTP_HOST
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 5000,
+  socketTimeout: 15000,
   debug: true,
   logger: true
 }
@@ -52,6 +58,9 @@ const alternateConfig = {
     rejectUnauthorized: false,
     servername: 'mail.partnerspoints.ae'
   },
+  connectionTimeout: 10000,
+  greetingTimeout: 5000,
+  socketTimeout: 15000,
   debug: true,
   logger: true
 }
@@ -65,8 +74,8 @@ export interface EmailOptions {
 
 export async function sendEmail({ to, subject, html, text }: EmailOptions) {
   const recipients = to.split(',').map(email => email.trim())
-  const configs = [fallbackConfig, primaryConfig, alternateConfig]
-  const configNames = ['Hosting Provider SSL', 'STARTTLS Fallback', 'Domain Mail SSL']
+  const configs = [primaryConfig, fallbackConfig, alternateConfig]
+  const configNames = ['Primary SSL (Port 465)', 'Fallback SSL', 'Domain Mail SSL']
   
   console.log('📧 Email delivery attempt started...')
   console.log('Recipients:', recipients)
@@ -179,55 +188,262 @@ export function generateOnboardingEmail(data: {
   metadata?: any
 }) {
   const metadata = data.metadata || {}
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://partnerspoints.ae'
   
   const html = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="background: #0b04d9; color: white; padding: 20px; text-align: center; margin-bottom: 20px;">
-        <h1 style="margin: 0; font-size: 24px;">🎉 New Business Onboarding Request!</h1>
-      </div>
-      
-      <div style="background: #f8fafc; padding: 20px; border-left: 4px solid #0b04d9; margin-bottom: 20px;">
-        <h2 style="color: #0b04d9; margin-top: 0;">Contact Information</h2>
-        <p><strong>Name:</strong> ${data.name}</p>
-        <p><strong>Business:</strong> ${data.company || 'N/A'}</p>
-        <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
-        <p><strong>Phone:</strong> <a href="tel:${data.phone}">${data.phone || 'N/A'}</a></p>
-        <p><strong>Designation:</strong> ${metadata.designation || 'N/A'}</p>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Business Onboarding Request</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f8fafc; padding: 40px 0;">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="600" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden;">
+                    
+                    <!-- Header with Logos -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #0b04d9 0%, #1a0fff 100%); padding: 40px 30px; text-align: center;">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center" style="padding-bottom: 20px;">
+                                        <table cellpadding="0" cellspacing="0" border="0">
+                                            <tr>
+                                                <td align="center" style="padding-right: 15px;">
+                                                    <img src="${baseUrl}/partnerspointslogo.png" alt="Partners Points" style="height: 50px; width: auto;">
+                                                </td>
+                                                <td align="center" style="padding-left: 15px;">
+                                                    <img src="${baseUrl}/rfmloyalty.png" alt="RFM Loyalty" style="height: 50px; width: auto;">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                                            🎉 New Business Onboarding Request
+                                        </h1>
+                                        <p style="margin: 10px 0 0 0; color: #e0e7ff; font-size: 16px;">
+                                            A new merchant is ready to join the loyalty revolution
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Contact Information Section -->
+                    <tr>
+                        <td style="padding: 35px 40px 0px 40px;">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td style="border-left: 4px solid #0b04d9; padding: 25px; background-color: #f8fafc; border-radius: 12px; margin-bottom: 25px;">
+                                        <h2 style="margin: 0 0 20px 0; color: #0b04d9; font-size: 22px; font-weight: 600;">
+                                            👤 Contact Information
+                                        </h2>
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size: 15px; line-height: 1.6;">
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 140px;">Name:</strong>
+                                                    <span style="color: #111827;">${data.name}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 140px;">Business:</strong>
+                                                    <span style="color: #111827;">${data.company || 'N/A'}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 140px;">Email:</strong>
+                                                    <a href="mailto:${data.email}" style="color: #0b04d9; text-decoration: none;">${data.email}</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 140px;">Phone:</strong>
+                                                    <a href="tel:${data.phone}" style="color: #0b04d9; text-decoration: none;">${data.phone || 'N/A'}</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 140px;">Designation:</strong>
+                                                    <span style="color: #111827;">${metadata.designation || 'N/A'}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-      <div style="background: #f8fafc; padding: 20px; border-left: 4px solid #22c55e; margin-bottom: 20px;">
-        <h2 style="color: #22c55e; margin-top: 0;">Business Details</h2>
-        <p><strong>Industry:</strong> ${metadata.industry || 'N/A'}</p>
-        <p><strong>Locations:</strong> ${metadata.locationCount || 1} location(s)</p>
-        <p><strong>Emirates:</strong> ${metadata.selectedEmirates?.join(', ') || 'N/A'}</p>
-        <p><strong>Monthly Customers:</strong> ~${metadata.monthlyCustomers?.[0]?.toLocaleString() || 'N/A'}</p>
-      </div>
+                    <!-- Business Details Section -->
+                    <tr>
+                        <td style="padding: 20px 40px 0px 40px;">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td style="border-left: 4px solid #22c55e; padding: 25px; background-color: #f0fdf4; border-radius: 12px;">
+                                        <h2 style="margin: 0 0 20px 0; color: #16a34a; font-size: 22px; font-weight: 600;">
+                                            🏢 Business Details
+                                        </h2>
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size: 15px; line-height: 1.6;">
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 160px;">Industry:</strong>
+                                                    <span style="color: #111827;">${metadata.industry || 'N/A'}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 160px;">Locations:</strong>
+                                                    <span style="color: #111827;">${metadata.locationCount || 1} location(s)</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 160px;">Emirates:</strong>
+                                                    <span style="color: #111827;">${metadata.selectedEmirates?.join(', ') || 'N/A'}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 160px;">Monthly Customers:</strong>
+                                                    <span style="color: #111827;">~${metadata.monthlyCustomers?.[0]?.toLocaleString() || 'N/A'}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-      <div style="background: #f8fafc; padding: 20px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
-        <h2 style="color: #f59e0b; margin-top: 0;">RFM Terminal Info</h2>
-        <p><strong>Has RFM Terminal:</strong> ${metadata.hasRfmTerminal ? 'Yes' : 'No'}</p>
-        ${metadata.hasRfmTerminal && metadata.terminalDetails ? 
-          `<p><strong>Merchant ID:</strong> <code style="background: #e5e5e5; padding: 2px 6px; border-radius: 4px;">${metadata.terminalDetails}</code></p>` : 
-          '<p><strong>Terminal Setup:</strong> Required</p>'
-        }
-      </div>
+                    <!-- RFM Terminal Section -->
+                    <tr>
+                        <td style="padding: 20px 40px 0px 40px;">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td style="border-left: 4px solid #f59e0b; padding: 25px; background-color: #fffbeb; border-radius: 12px;">
+                                        <h2 style="margin: 0 0 20px 0; color: #d97706; font-size: 22px; font-weight: 600;">
+                                            💳 RFM Terminal Information
+                                        </h2>
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size: 15px; line-height: 1.6;">
+                                            <tr>
+                                                <td style="padding: 8px 0; color: #374151;">
+                                                    <strong style="color: #1f2937; display: inline-block; width: 160px;">Has RFM Terminal:</strong>
+                                                    <span style="color: #111827; background-color: ${metadata.hasRfmTerminal ? '#dcfce7' : '#fef2f2'}; padding: 4px 8px; border-radius: 6px; font-size: 14px; font-weight: 500;">
+                                                        ${metadata.hasRfmTerminal ? 'Yes ✅' : 'No ❌'}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            ${metadata.hasRfmTerminal && metadata.terminalDetails ? 
+                                                `<tr>
+                                                    <td style="padding: 8px 0; color: #374151;">
+                                                        <strong style="color: #1f2937; display: inline-block; width: 160px;">Merchant ID:</strong>
+                                                        <code style="background-color: #f3f4f6; padding: 6px 10px; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 14px; color: #1f2937; border: 1px solid #e5e7eb;">${metadata.terminalDetails}</code>
+                                                    </td>
+                                                </tr>` : 
+                                                `<tr>
+                                                    <td style="padding: 8px 0; color: #374151;">
+                                                        <strong style="color: #1f2937; display: inline-block; width: 160px;">Status:</strong>
+                                                        <span style="color: #dc2626; background-color: #fef2f2; padding: 4px 8px; border-radius: 6px; font-size: 14px;">Terminal Setup Required</span>
+                                                    </td>
+                                                </tr>`
+                                            }
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-      <div style="background: #f8fafc; padding: 20px; border-left: 4px solid #6366f1; margin-bottom: 20px;">
-        <h2 style="color: #6366f1; margin-top: 0;">Generated Message</h2>
-        <p style="font-style: italic;">"${data.message}"</p>
-      </div>
+                    <!-- Message Section -->
+                    <tr>
+                        <td style="padding: 20px 40px 35px 40px;">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td style="border-left: 4px solid #6366f1; padding: 25px; background-color: #f0f9ff; border-radius: 12px;">
+                                        <h2 style="margin: 0 0 15px 0; color: #4338ca; font-size: 22px; font-weight: 600;">
+                                            💬 Message
+                                        </h2>
+                                        <p style="margin: 0; color: #374151; font-size: 15px; line-height: 1.6; font-style: italic; background-color: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e0e7ff;">
+                                            "${data.message}"
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-      <div style="text-align: center; padding: 20px;">
-        <a href="${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/admin/submissions" 
-           style="background: #0b04d9; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-          View in Admin Panel
-        </a>
-      </div>
+                    <!-- Action Button Section -->
+                    <tr>
+                        <td style="padding: 35px 40px 30px 40px; text-align: center;">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center">
+                                        <table cellpadding="0" cellspacing="0" border="0">
+                                            <tr>
+                                                <td style="background: linear-gradient(135deg, #0b04d9 0%, #1a0fff 100%); border-radius: 12px; padding: 18px 35px;">
+                                                    <a href="${baseUrl}/admin/submissions" style="color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600; letter-spacing: 0.5px;">
+                                                        🎯 View in Admin Panel
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <p style="margin: 15px 0 0 0; color: #6b7280; font-size: 14px;">
+                                            Click above to review and respond to this onboarding request
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-      <div style="text-align: center; color: #6b7280; font-size: 12px; margin-top: 20px;">
-        <p>Partners Points Loyalty Platform</p>
-      </div>
-    </div>
+                    <!-- Footer Section -->
+                    <tr>
+                        <td style="background-color: #f8fafc; padding: 30px 40px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center">
+                                        <table cellpadding="0" cellspacing="0" border="0">
+                                            <tr>
+                                                <td align="center" style="padding-right: 10px;">
+                                                    <img src="${baseUrl}/partnerspointslogo.png" alt="Partners Points" style="height: 30px; width: auto; opacity: 0.7;">
+                                                </td>
+                                                <td align="center" style="padding-left: 10px;">
+                                                    <img src="${baseUrl}/rfmloyalty.png" alt="RFM Loyalty" style="height: 30px; width: auto; opacity: 0.7;">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <p style="margin: 15px 0 5px 0; color: #6b7280; font-size: 14px; font-weight: 600;">
+                                            Partners Points × RFM Loyalty
+                                        </p>
+                                        <p style="margin: 0; color: #9ca3af; font-size: 13px;">
+                                            Building Customer Loyalty, One Transaction at a Time
+                                        </p>
+                                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                                            <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                                                This email was generated automatically from the Partners Points website.<br>
+                                                Please respond to the customer at: <a href="mailto:${data.email}" style="color: #0b04d9;">${data.email}</a>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
   `
 
   const text = `
