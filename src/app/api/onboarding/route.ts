@@ -101,8 +101,7 @@ export async function POST(request: NextRequest) {
       ]
     }
 
-    // Send email notifications asynchronously (don't block response)
-    setImmediate(async () => {
+    // Send email notifications synchronously to avoid Vercel timeout issues
     try {
       console.log(`📧 Starting email notifications for submission ${submission.id}`)
       
@@ -170,11 +169,10 @@ export async function POST(request: NextRequest) {
         message: emailError instanceof Error ? emailError.message : emailError,
         stack: emailError instanceof Error ? emailError.stack : 'No stack trace'
       })
-      // Don't fail the entire request if email fails
+      // Don't fail the entire request if email fails - but log the error
     }
-    })
 
-    // Return response immediately
+    // Return response after attempting email send
     return NextResponse.json(responseData)
 
   } catch (error) {
