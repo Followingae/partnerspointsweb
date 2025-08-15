@@ -103,7 +103,7 @@ export default function Home() {
                     <Badge variant="outline" className="bg-white/80 backdrop-blur-md border-gray-200/50 shadow-sm px-3 py-1.5 text-xs text-gray-600 gap-2 justify-center lg:justify-start">
                       Powered by
                       <Image
-                        src="/rfm-loyalty-logo.jpg"
+                        src="/rfmloyalty.png"
                         alt="RFM Loyalty"
                         width={90}
                         height={24}
@@ -242,7 +242,7 @@ export default function Home() {
                 <Badge variant="outline" className="bg-white/90 backdrop-blur-md border-gray-200/60 shadow-sm px-4 py-2 text-xs text-gray-600 gap-2">
                   Powered by
                   <Image
-                    src="/rfm-loyalty-logo.jpg"
+                    src="/rfmloyalty.png"
                     alt="RFM Loyalty"
                     width={100}
                     height={25}
@@ -299,7 +299,7 @@ export default function Home() {
                   <Badge variant="outline" className="bg-white/80 backdrop-blur-md border-gray-200/50 shadow-sm px-3 py-1.5 text-xs text-gray-600 gap-2 justify-center lg:justify-start">
                     Powered by
                     <Image
-                      src="/rfm-loyalty-logo.jpg"
+                      src="/rfmloyalty.png"
                       alt="RFM Loyalty"
                       width={90}
                       height={24}
@@ -514,7 +514,7 @@ export default function Home() {
               <Badge variant="outline" className="bg-white/90 backdrop-blur-md border-gray-200/60 shadow-sm px-4 py-2 text-xs text-gray-600 gap-2">
                 Powered by
                 <Image
-                  src="/rfm-loyalty-logo.jpg"
+                  src="/rfmloyalty.png"
                   alt="RFM Loyalty"
                   width={100}
                   height={25}

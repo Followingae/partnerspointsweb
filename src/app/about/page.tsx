@@ -228,7 +228,7 @@ export default function AboutPage() {
                     <div className="text-center">
                       <div className="w-32 h-16 flex items-center justify-center mx-auto mb-4">
                         <Image
-                          src="/rfm-loyalty-logo.jpg"
+                          src="/rfmloyalty.png"
                           alt="RFM Loyalty"
                           width={128}
                           height={64}

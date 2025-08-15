@@ -500,7 +500,7 @@ export default function SupermarketsPage() {
               </p>
               <div className="flex items-center justify-center mx-auto">
                 <Image 
-                  src="/rfm-loyalty-logo.jpg" 
+                  src="/rfmloyalty.png" 
                   alt="RFM Loyalty Logo" 
                   width={120} 
                   height={32} 
