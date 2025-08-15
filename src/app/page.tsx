@@ -514,7 +514,7 @@ export default function Home() {
               <Badge variant="outline" className="bg-white/90 backdrop-blur-md border-gray-200/60 shadow-sm px-4 py-2 text-xs text-gray-600 gap-2">
                 Powered by
                 <Image
-                  src="/rfm-loyalty-logo.jpg"
+                  src="/rfm-loyalty-logo.svg"
                   alt="RFM Loyalty"
                   width={100}
                   height={25}

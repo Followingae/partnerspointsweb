@@ -88,7 +88,21 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to save onboarding submission')
     }
 
-    // Send email notifications
+    // Prepare response immediately - don't wait for emails
+    const responseData = {
+      success: true,
+      message: 'Thank you! We\'ve received your onboarding request and will be in touch within 1-2 business days to set up your loyalty program.',
+      submissionId: submission.id,
+      nextSteps: [
+        'Our team will review your application',
+        'We\'ll contact you to discuss your loyalty program setup',
+        'If needed, we\'ll provide and configure RFM terminals',
+        'Your loyalty program will be live within 1-2 business days'
+      ]
+    }
+
+    // Send email notifications asynchronously (don't block response)
+    setImmediate(async () => {
     try {
       console.log(`📧 Starting email notifications for submission ${submission.id}`)
       
@@ -165,18 +179,10 @@ Partners Points Team`
       })
       // Don't fail the entire request if email fails
     }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Thank you! We\'ve received your onboarding request and will be in touch within 1-2 business days to set up your loyalty program.',
-      submissionId: submission.id,
-      nextSteps: [
-        'Our team will review your application',
-        'We\'ll contact you to discuss your loyalty program setup',
-        'If needed, we\'ll provide and configure RFM terminals',
-        'Your loyalty program will be live within 1-2 business days'
-      ]
     })
+
+    // Return response immediately
+    return NextResponse.json(responseData)
 
   } catch (error) {
     console.error('Onboarding error:', error)

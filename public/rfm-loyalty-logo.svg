@@ -1,0 +1,10 @@
+<svg width="240" height="64" viewBox="0 0 240 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="120" height="64" fill="#C53030"/>
+  <rect x="120" y="0" width="120" height="64" fill="#4A5568"/>
+  
+  <!-- RFM text in white on red background -->
+  <text x="60" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white">RFM</text>
+  
+  <!-- Loyalty text in white on gray background -->
+  <text x="180" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="normal" text-anchor="middle" fill="white">Loyalty</text>
+</svg>

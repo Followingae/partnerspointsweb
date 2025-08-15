@@ -406,30 +406,28 @@ export default function OnboardingPage() {
         throw new Error(result.error || 'Submission failed')
       }
 
-      // Set submission success state
+      // Set submission success state immediately
       setSubmissionResponse(result)
       setIsSubmitted(true)
 
-      // Success animation - fade out current content and show success
+      // Quick success animation - much faster
       const stepElement = stepRef.current
       if (stepElement) {
         gsap.to(stepElement.children, {
-          y: -30,
+          y: -10,
           opacity: 0,
-          duration: 0.4,
+          duration: 0.15,
           ease: "power2.out",
-          stagger: 0.1,
+          stagger: 0.02,
           onComplete: () => {
-            // Let React handle rendering the success state
-            setTimeout(() => {
-              const successElement = document.querySelector('.success-content')
-              if (successElement) {
-                gsap.fromTo(successElement.children,
-                  { y: 30, opacity: 0 },
-                  { y: 0, opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.15 }
-                )
-              }
-            }, 100)
+            // Immediate success animation - no delay
+            const successElement = document.querySelector('.success-content')
+            if (successElement) {
+              gsap.fromTo(successElement.children,
+                { y: 10, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.25, ease: "power2.out", stagger: 0.05 }
+              )
+            }
           }
         })
       }
