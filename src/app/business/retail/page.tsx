@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+"use client";
 import Section from "@/components/modern/Section";
 import HeroBg from "@/components/modern/HeroBg";
 import InView from "@/components/modern/InView";
@@ -13,10 +13,7 @@ import { CardContent, CardHeader, CardTitle, CardDescription } from "@/component
 import { type ChartConfig } from "@/components/ui/chart";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, BarChart, Bar, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/charts/ClientChart";
 
-export const metadata: Metadata = {
-  title: 'Retail Loyalty Built Into Your RFM Payment Terminal | Partners Points',
-  description: 'Launch a plug-and-play retail loyalty program inside your RFM Payment Terminal. Award/redeem points in under 10 seconds. No apps. No integrations. Powered by RFM Loyalty.',
-};
+// Metadata moved to layout.tsx for client components
 
 export default function RetailPage() {
   // Chart data - realistic retail metrics

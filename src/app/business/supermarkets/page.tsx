@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+"use client";
 import Section from "@/components/modern/Section";
 import HeroBg from "@/components/modern/HeroBg";
 import InView from "@/components/modern/InView";
@@ -13,10 +13,7 @@ import { CardContent, CardHeader, CardTitle, CardDescription } from "@/component
 import { type ChartConfig } from "@/components/ui/chart";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, BarChart, Bar, AreaChart, Area, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/charts/ClientChart";
 
-export const metadata: Metadata = {
-  title: 'Supermarket Loyalty in Your RFM Payment Terminal | Partners Points',
-  description: 'Increase basket size and trip frequency with loyalty built into your RFM Payment Terminal. Award/redeem in seconds at checkout. Powered by RFM Loyalty.',
-};
+// Metadata moved to layout.tsx for client components
 
 export default function SupermarketsPage() {
   // Chart data - realistic supermarket metrics

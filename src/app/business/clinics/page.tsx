@@ -1,3 +1,5 @@
+"use client";
+
 import { Metadata } from 'next';
 import Section from "@/components/modern/Section";
 import HeroBg from "@/components/modern/HeroBg";
@@ -13,10 +15,7 @@ import { CardContent, CardHeader, CardTitle, CardDescription } from "@/component
 import { type ChartConfig } from "@/components/ui/chart";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, BarChart, Bar, PieChart, Pie, Cell, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/charts/ClientChart";
 
-export const metadata: Metadata = {
-  title: 'Clinic & Wellness Loyalty in Your RFM Payment Terminal | Partners Points',
-  description: 'Encourage follow-ups and wellness plans with loyalty built into your RFM Payment Terminal. Award/redeem in seconds at reception. Powered by RFM Loyalty.',
-};
+// Metadata moved to layout.tsx for client components
 
 export default function ClinicsPage() {
   // Chart data - realistic clinic metrics
