@@ -95,17 +95,22 @@ export async function sendEmail({ to, subject, html, text }: EmailOptions) {
         // Continue anyway as verify() can be unreliable
       }
       
+      // Use proper sender configuration
       const mailOptions = {
-        from: `"Partners Points" <${process.env.SMTP_USER}>`, // Use authenticated SMTP user as sender
-        replyTo: process.env.EMAIL_FROM || `"Partners Points" <${process.env.SMTP_USER}>`,
+        from: `"Partners Points" <${process.env.SMTP_USER}>`,
+        replyTo: process.env.SMTP_USER,
         to: recipients,
         subject,
         text,
         html,
+        envelope: {
+          from: process.env.SMTP_USER,
+          to: recipients
+        },
         headers: {
           'X-Mailer': 'Partners Points Contact Form',
-          'X-Priority': '1',
-          'Importance': 'high'
+          'Return-Path': process.env.SMTP_USER,
+          'Sender': process.env.SMTP_USER
         }
       }
       

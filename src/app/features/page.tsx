@@ -343,11 +343,12 @@ export default function FeaturesPage() {
               </p>
               <div className="flex items-center justify-center mx-auto">
                 <Image 
-                  src="/rfm-loyalty-logo.svg" 
+                  src="/rfm-loyalty-logo.jpg" 
                   alt="RFM Loyalty Logo" 
                   width={120} 
                   height={32} 
                   className="h-8 w-auto"
+                  unoptimized
                 />
               </div>
             </div>
