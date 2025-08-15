@@ -22,19 +22,18 @@ const primaryConfig = {
   logger: true
 }
 
-// Fallback configuration - mail.domain.com STARTTLS
+// Fallback configuration - Direct hosting provider server SSL
 const fallbackConfig = {
-  host: 'mail.partnerspoints.ae',
-  port: 587,
-  secure: false,
-  requireTLS: true,
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || '465'),
+  secure: true,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
   tls: {
     rejectUnauthorized: false,
-    servername: 'mail.partnerspoints.ae'
+    servername: process.env.SMTP_HOST
   },
   debug: true,
   logger: true
@@ -67,7 +66,7 @@ export interface EmailOptions {
 export async function sendEmail({ to, subject, html, text }: EmailOptions) {
   const recipients = to.split(',').map(email => email.trim())
   const configs = [fallbackConfig, primaryConfig, alternateConfig]
-  const configNames = ['Direct SSL (465)', 'STARTTLS (587)', 'cPanel SSL (465)']
+  const configNames = ['Hosting Provider SSL', 'STARTTLS Fallback', 'Domain Mail SSL']
   
   console.log('📧 Email delivery attempt started...')
   console.log('Recipients:', recipients)

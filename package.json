@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:production": "next build && npm run copy-assets",
+    "copy-assets": "cp -r public/* .next/static/ || xcopy public .next\\static /E /I /Y",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
