@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@supabase/supabase-js'
-import { sendEmail } from '@/lib/email'
+import { sendEmail, generateOnboardingEmail, generateCustomerConfirmationEmail } from '@/lib/email'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -106,59 +106,52 @@ export async function POST(request: NextRequest) {
     try {
       console.log(`📧 Starting email notifications for submission ${submission.id}`)
       
-      // Send notification to admin
+      // Prepare email data in the exact format as the working email system
+      const emailData = {
+        name: submission.name,
+        email: submission.email,
+        company: submission.company,
+        phone: submission.phone,
+        message: submission.message,
+        metadata: {
+          designation: validatedData.designation,
+          industry: validatedData.industry,
+          locationCount: validatedData.locationCount,
+          selectedEmirates: validatedData.selectedEmirates,
+          monthlyCustomers: validatedData.monthlyCustomers,
+          hasRfmTerminal: validatedData.hasRfmTerminal,
+          terminalDetails: validatedData.terminalDetails
+        }
+      }
+      
+      // Generate the beautiful branded email template (same as test emails)
+      const { html: adminHtml, text: adminText } = generateOnboardingEmail(emailData)
+      
+      // Send admin notification using the exact same system as test emails
       const adminSubject = `🚀 New Business Onboarding: ${submission.company} (${validatedData.industry})`
       
-      let adminEmailBody = `New onboarding request received:
-
-Name: ${submission.name}
-Email: ${submission.email}
-Company: ${submission.company}
-Phone: ${submission.phone || 'Not provided'}
-Industry: ${validatedData.industry}
-Designation: ${validatedData.designation}
-Locations: ${validatedData.locationCount} across ${validatedData.selectedEmirates.join(', ')}
-RFM Terminal: ${validatedData.hasRfmTerminal ? 'Yes' : 'No'}
-${validatedData.terminalDetails ? `Terminal ID: ${validatedData.terminalDetails}` : ''}
-
-Message: ${submission.message}
-
-Submission ID: ${submission.id}
-Submitted: ${new Date().toLocaleString()}`
-
       console.log(`📧 Sending admin notification to: ${process.env.ADMIN_EMAIL}`)
       const adminResult = await sendEmail({
         to: process.env.ADMIN_EMAIL || 'admin@partnerspoints.com',
         subject: adminSubject,
-        text: adminEmailBody,
-        html: adminEmailBody.replace(/\n/g, '<br>')
+        html: adminHtml,
+        text: adminText
       })
       
       console.log('📧 Admin email result:', adminResult)
 
-      // Send confirmation to customer  
-      const customerSubject = 'Thank you for your onboarding request - Partners Points'
-      const customerBody = `Dear ${submission.name},
-
-Thank you for your onboarding request! We've received your application for ${submission.company} and will review it shortly.
-
-Our team will be in touch within 1-2 business days to discuss your loyalty program setup.
-
-Next Steps:
-• Our team will review your application
-• We'll contact you to discuss your loyalty program setup
-• If needed, we'll provide and configure RFM terminals  
-• Your loyalty program will be live within 1-2 business days
-
-Best regards,
-Partners Points Team`
+      // Generate customer confirmation email with beautiful template
+      const { html: customerHtml, text: customerText } = generateCustomerConfirmationEmail({
+        name: submission.name,
+        company: submission.company
+      })
 
       console.log(`📧 Sending customer confirmation to: ${submission.email}`)
       const customerResult = await sendEmail({
         to: submission.email,
-        subject: customerSubject,
-        text: customerBody,
-        html: customerBody.replace(/\n/g, '<br>')
+        subject: 'Thank you for your interest! - Partners Points',
+        html: customerHtml,
+        text: customerText
       })
       
       console.log('📧 Customer email result:', customerResult)
